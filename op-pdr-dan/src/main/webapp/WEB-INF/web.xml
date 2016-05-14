@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    /*
+     # Copyright (c) 2016 {UPRC}.
+     # All rights reserved. This program and the accompanying materials
+     # are made available under the terms of the The MIT License (MIT).
+     # which accompanies this distribution, and is available at
+     # http://opensource.org/licenses/MIT
+   
+     # Contributors:
+     #    {Constantinos Patsakis} {UPRC}
+     #    {Stamatis Glykos} {UPRC}
+     #    {Constantinos Alexandris} {UPRC}
+     # Initially developed in the context of OPERANDO EU project www.operando.eu 
+     */
+ -->
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" id="WebApp_ID">
+	<display-name>authenticationservice</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

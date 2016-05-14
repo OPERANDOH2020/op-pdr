@@ -1,0 +1,164 @@
+# Copyright (c) 2016 {UPRC}.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the The MIT License (MIT).
+# which accompanies this distribution, and is available at
+# http://opensource.org/licenses/MIT
+
+# Contributors:
+#    {Constantinos Patsakis} {UPRC}
+#    {Stamatis Glykos} {UPRC}
+#    {Constantinos Alexandris} {UPRC}
+# Initially developed in the context of OPERANDO EU project www.operando.eu
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "0.0.1"
+  title: eu.operando.pdr.dan
+  description: Operando's DAN interfaces
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+host: localhost:8080
+schemes:
+- http
+basePath: /operando/pdr/access_node/
+produces:
+- application/json
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /getResults:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown
+      description:   
+         This operation returns the requested rows that result by the query
+      parameters:
+        -
+          name: payload
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/RequestObject"
+      responses:
+        # Response code
+        "200":
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Results"
+        "400":
+          description: Server Error #TODO: Error msg definition is needed
+
+definitions:
+  Results:
+    type: object
+    properties:
+      user_result:
+        type: array
+        items:
+          $ref: "#/definitions/UserResult"
+  UserResult:
+    type: object
+    properties:
+      general_data:
+        type: object
+        items:
+          $ref: "#/definitions/UserGeneralData"
+      assurance_data:
+        type: object
+        items:
+          $ref: "#/definitions/UserAssuranceData"
+      social_context_data:
+        type: object
+        items:
+          $ref: "#/definitions/UserSocialContextData"
+      clinical_data:
+        type: object
+        items:
+          $ref: "#/definitions/UserClinicalData"
+      care_needs_data:
+        type: object
+        items:
+          $ref: "#/definitions/UserCareNeedsData"          
+      care_log_data:
+        type: object
+        items:
+          $ref: "#/definitions/UserCareLogData"
+  UserGeneralData:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      firstname:
+        type: string
+      lastname:
+        type: string
+      sex:
+        type: string
+      date_of_birth:
+        type: string                
+        format: date-time
+      email:
+        type: string
+      #TODO:Phones, Address should be added as well
+  UserAssuranceData:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/UserDataUnit"
+  UserSocialContextData:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/UserDataUnit"
+  UserClinicalData:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/UserDataUnit"
+  UserCareNeedsData:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/UserDataUnit"
+  UserCareLogData:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/UserDataUnit"
+  UserDataUnit:
+    type: object
+    properties:
+      attr_name:
+        type: string
+      attr_value:
+        type: string
+  RequestObject:
+    type: object
+    properties:
+      st:
+        description: A valid service ticket (st)
+        type: string
+      queryId:
+        description: Identifier of the calling query
+        type: string        
+      paramValues:
+        description: An array of extra parameters for the query
+        type: array
+        items:
+          type: string
+                    
