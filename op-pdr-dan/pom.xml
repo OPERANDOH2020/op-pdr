@@ -1,27 +1,24 @@
-<!--
-     # Copyright (c) 2016 {UPRC}.
-     # All rights reserved. This program and the accompanying materials
-     # are made available under the terms of the The MIT License (MIT).
-     # which accompanies this distribution, and is available at
-     # http://opensource.org/licenses/MIT
-   
-     # Contributors:
-     #    {Constantinos Patsakis} {UPRC}
-     #    {Stamatis Glykos} {UPRC}
-     #    {Constantinos Alexandris} {UPRC}
-     # Initially developed in the context of OPERANDO EU project www.operando.eu
- -->
- 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.operando</groupId>
-  <artifactId>op-pdr-dan</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
-  <name>Operando's Data Access Node</name>
-  
-  <properties>
+<!-- # Copyright (c) 2016 {UPRC}. # All rights reserved. This program and 
+	the accompanying materials # are made available under the terms of the The 
+	MIT License (MIT). # which accompanies this distribution, and is available 
+	at # http://opensource.org/licenses/MIT # Contributors: # {Constantinos Patsakis} 
+	{UPRC} # {Stamatis Glykos} {UPRC} # {Constantinos Alexandris} {UPRC} # Initially 
+	developed in the context of OPERANDO EU project www.operando.eu -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.operando</groupId>
+	<artifactId>op-pdr-dan</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>Operando's Data Access Node</name>
+
+	<properties>
 		<springframework.version>4.0.6.RELEASE</springframework.version>
+		<swagger.version>2.2.2</swagger.version>
+		<derby.version>10.11.1.1</derby.version>
+		<jackson.version>2.5.3</jackson.version>
 	</properties>
 
 	<dependencies>
@@ -57,31 +54,41 @@
 			<version>2.3.1</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.13</version>
-		</dependency>
-
+		<!--  -->				
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.5.3</version>
+			<version>${jackson.version}</version>
+		</dependency>
+		
+		<!-- Spring JDBC -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		
+		<!-- Derby DB -->
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>${derby.version}</version>
 		</dependency>
 
+		<!-- Swagger -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<version>2.2.2</version>
+			<version>${swagger.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.2.2</version>
-		</dependency>		
+			<version>${swagger.version}</version>
+		</dependency>
+						
 	</dependencies>
-
 
 	<build>
 		<pluginManagement>

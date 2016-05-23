@@ -11,36 +11,34 @@
  *  #    {Constantinos Alexandris} {UPRC}
  *  # Initially developed in the context of OPERANDO EU project www.operando.eu 
  *******************************************************************************/
- 
+
 package eu.operando.pdr.dan.initializer;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
+import eu.operando.pdr.dan.config.RootConfiguration;
+import eu.operando.pdr.dan.config.WebConfiguration;
 
-public class Initializer implements WebApplicationInitializer {
+public class Initializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
-    private static final String CONFIG_LOCATION = "eu.operando.pdr.dan.configuration";
-    private static final String MAPPING_URL = "/*";
-    
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        WebApplicationContext context = getContext();
-        servletContext.addListener(new ContextLoaderListener(context));
-        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("DispatcherServlet", new DispatcherServlet(context));
-        dispatcher.setLoadOnStartup(1);
-        dispatcher.addMapping(MAPPING_URL);
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+	return new Class[] { RootConfiguration.class };	
     }
 
-    private AnnotationConfigWebApplicationContext getContext() {
-        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.setConfigLocation(CONFIG_LOCATION);
-        return context;
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+	return new Class[] { WebConfiguration.class };
     }
 
+    @Override
+    protected String[] getServletMappings() {
+	return new String[] { "/" };
+    }
+
+//    @Override
+//    public void onStartup(ServletContext servletContext) throws ServletException {
+//	super.onStartup(servletContext);
+//	servletContext.setInitParameter("spring.profiles.active", "development"); //{production, development}
+//    }
 }
