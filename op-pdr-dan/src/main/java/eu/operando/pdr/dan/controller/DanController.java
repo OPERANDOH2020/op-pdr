@@ -23,10 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import eu.operando.pdr.dan.controller.dto.getResultsRequest;
 import eu.operando.pdr.dan.controller.exceptions.DanBaseException;
 import eu.operando.pdr.dan.service.RDBMSService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -45,17 +44,9 @@ public class DanController {
 	    )
     @ApiResponses(value = { 
 	    @ApiResponse(code = 400, message = "Server error")			 
-    })
-    @ApiImplicitParams({ 
-	@ApiImplicitParam(name = "st", value = "A valid service ticket (st) to access DAN", required = true, dataType = "string", paramType = "body"), 
-	@ApiImplicitParam(name = "queryId", value = "The unique identifier of the query being called", required = true, dataType = "string", paramType = "body"),
-	@ApiImplicitParam(name = "params", value = "An array of extra parameters for the query", required = false, dataType = "Array[string]", paramType = "body")
-    })    	   
-    public final List<Map<String,Object>> getResults(
-	    @RequestBody String st, 
-	    @RequestBody String queryId, 
-	    @RequestBody(required=false) final String[] params) throws DanBaseException{		
+    })      	   
+    public final List<Map<String,Object>> getResults(@RequestBody getResultsRequest request) throws DanBaseException{		
 
-	return service.getResults(queryId, params);
+	return service.getResults(request.getQueryId(), request.getParams());
     }
 }

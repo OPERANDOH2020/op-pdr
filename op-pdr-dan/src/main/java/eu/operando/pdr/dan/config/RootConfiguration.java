@@ -17,17 +17,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@ComponentScan( basePackages="eu.operando.pdr.dan" )
+import eu.operando.pdr.dan.config.db.RDBMSConfiguration;
+
+@ComponentScan(basePackages = {"eu.operando.pdr.dan.dao", "eu.operando.pdr.dan.service"})
 @Configuration
+@Import(RDBMSConfiguration.class)
 public class RootConfiguration {
 
-    @Autowired
-    DataSource dataSource;
-
     @Bean
-    public JdbcTemplate getJdbcTemplate() {
+    @Autowired
+    public JdbcTemplate getJdbcTemplate(DataSource dataSource) {
 	return new JdbcTemplate(dataSource);
     }
 }

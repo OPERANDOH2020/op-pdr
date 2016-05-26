@@ -14,9 +14,13 @@
 
 package eu.operando.pdr.dan.initializer;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import eu.operando.pdr.dan.config.RootConfiguration;
+import eu.operando.pdr.dan.config.SwaggerConfig;
 import eu.operando.pdr.dan.config.WebConfiguration;
 
 public class Initializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -28,7 +32,7 @@ public class Initializer extends AbstractAnnotationConfigDispatcherServletInitia
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-	return new Class[] { WebConfiguration.class };
+	return new Class[] { WebConfiguration.class, SwaggerConfig.class };
     }
 
     @Override
@@ -36,9 +40,9 @@ public class Initializer extends AbstractAnnotationConfigDispatcherServletInitia
 	return new String[] { "/" };
     }
 
-//    @Override
-//    public void onStartup(ServletContext servletContext) throws ServletException {
-//	super.onStartup(servletContext);
-//	servletContext.setInitParameter("spring.profiles.active", "development"); //{production, development}
-//    }
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+	super.onStartup(servletContext);
+	servletContext.setInitParameter("spring.profiles.active", "dev"); //{prod, dev}
+    }
 }
