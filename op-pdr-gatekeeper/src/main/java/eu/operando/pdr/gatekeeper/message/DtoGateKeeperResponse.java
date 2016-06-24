@@ -1,14 +1,14 @@
-package eu.operando.pdr.gatekeeper;
+package eu.operando.pdr.gatekeeper.message;
 
 /**
  * Wrapper class to contain response details. 
  */
-public class GateKeeperResponse
+public class DtoGateKeeperResponse
 {
 	private String securityToken = "";
 	private String danUrl = "";
 	
-	public GateKeeperResponse() {}
+	public DtoGateKeeperResponse() {}
 
 	
 	public String getSecurityToken()

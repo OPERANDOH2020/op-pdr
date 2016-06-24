@@ -11,6 +11,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.http.HttpStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import eu.operando.LogOperando;
+import eu.operando.Utils;
+import eu.operando.pdr.gatekeeper.message.DtoGateKeeperRequest;
+import eu.operando.pdr.gatekeeper.message.DtoGateKeeperResponse;
 
 /**
  * The GateKeeper (GK) supports controlled release of personal user data,
@@ -30,7 +37,25 @@ import org.apache.http.HttpStatus;
 @Path("/data_request")
 public class GateKeeperWebService
 {
-	private GateKeeperClientI client = null;
+	// Log4j logging.
+	private static final Logger LOGGER = LogManager.getLogger(GateKeeperWebService.class);
+
+	// Location of properties file.
+	private static final String PROPERTIES_FILE_GATEKEEPER = "config.properties";
+
+	// Properties file property names.
+	private static final String PROPERTY_NAME_ORIGIN_AUTHENTICATION_API = "originAuthenticationApi";
+	private static final String PROPERTY_NAME_ORIGIN_LOG_DB = "originLogDb";
+	private static final String PROPERTY_NAME_ORIGIN_RIGHTS_MANAGEMENT = "originRightsManagement";
+	private static final String PROPERTY_NAME_ORIGIN_DATA_ACCESS_NODE = "originDataAccessNode";
+	
+	// Properties file property values.
+	private static final String ORIGIN_AUTHENTICATION_API = Utils.loadPropertyString(PROPERTIES_FILE_GATEKEEPER, PROPERTY_NAME_ORIGIN_AUTHENTICATION_API);
+	private static final String ORIGIN_LOG_DB = Utils.loadPropertyString(PROPERTIES_FILE_GATEKEEPER, PROPERTY_NAME_ORIGIN_LOG_DB);
+	private static final String ORIGIN_RIGHTS_MANAGEMENT = Utils.loadPropertyString(PROPERTIES_FILE_GATEKEEPER, PROPERTY_NAME_ORIGIN_RIGHTS_MANAGEMENT);
+	private static final String ORIGIN_DATA_ACCESS_NODE = Utils.loadPropertyString(PROPERTIES_FILE_GATEKEEPER, PROPERTY_NAME_ORIGIN_DATA_ACCESS_NODE);
+	
+	private GateKeeperClientI client = new GateKeeperClient(ORIGIN_AUTHENTICATION_API, ORIGIN_LOG_DB, ORIGIN_RIGHTS_MANAGEMENT, ORIGIN_DATA_ACCESS_NODE);
 	
 	/**
 	 * This constructor is needed for the web server (e.g. tomcat) to make use of this class.
@@ -39,11 +64,8 @@ public class GateKeeperWebService
 	{
 		//TODO - for testing. Remove when can unit test properly.
 		//client = new GateKeeperClientStub(false, false, "token", "url");
-		//client = new GateKeeperClientStub(true, false, "token", "url");
+		client = new GateKeeperClientStub(true, false, "token", "url");
 		//client = new GateKeeperClientStub(true, true, "token", "url");
-		
-		//TODO - make these hosts configurable.
-		client = new GateKeeperClient("http://localhost:8080", "http://localhost:8080", "http://localhost:8080", "http://localhost:8080");
 	}
 	
 	public GateKeeperWebService(GateKeeperClientI client)
@@ -54,17 +76,18 @@ public class GateKeeperWebService
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response handleOspDataAccessRequest(GateKeeperRequestWrapper wrapper)
+	public Response handleOspDataAccessRequest(DtoGateKeeperRequest wrapper)
 	{
 		//Read the relevant details from the DTO.
 		String serviceTicket = wrapper.getServiceTicket();
-		int ospId = wrapper.getOspId();
-		int queryId = wrapper.getQueryId();
-		Vector<Integer> userIds = wrapper.getUserIds();
+		String ospId = wrapper.getOspId();
+		String roleId = wrapper.getRoleId();
+		String queryId = wrapper.getQueryId();
+		Vector<String> userIds = wrapper.getUserIds();
 		
-		//Variables for the response that could be passed back to the OSP.
+		//Variables for the HTTP response that could be passed back to the OSP.
 		int statusCode = HttpStatus.SC_OK;
-		GateKeeperResponse responseDto = new GateKeeperResponse();
+		DtoGateKeeperResponse responseDto = new DtoGateKeeperResponse();
 				
 		//Check the OSP's credentials with the AS module.
 		boolean isOspAuthenticated = client.isOspAuthenticated(serviceTicket);
@@ -72,13 +95,13 @@ public class GateKeeperWebService
 		if (isOspAuthenticated)
 		{
 			//If the authentication was successful, check that the OSP is authorised to access the requested data.
-			AuthorisationWrapper authorisationWrapper = client.authoriseOsp(ospId, queryId, userIds);
+			AuthorisationWrapper authorisationWrapper = client.authoriseOsp(ospId, roleId, queryId, userIds);
 			boolean isQueryPermissible = authorisationWrapper.isQueryPermissible();
 			
 			if (isQueryPermissible)
 			{
 				//If the OSP is authorised, set the values to be returned in the message body.
-				String danUrl = client.getDanUrlForQuery(ospId, queryId, userIds);
+				String danUrl = client.getDanUrlForQuery(ospId, roleId, queryId, userIds);
 				responseDto.setDanUrl(danUrl);
 				
 				String securityToken = authorisationWrapper.getSecurityToken();
@@ -104,6 +127,33 @@ public class GateKeeperWebService
 		}
 		
 		//Return the response.
+		logAccessRequest(wrapper, statusCode);
 		return responseBuilder.build();
+	}
+	
+	/**
+	 * Log details on for information on the GK.
+	 * 
+	 * @param wrapper
+	 * 		object containing information about the incoming request.
+	 * @param statusCode
+	 * 		indicates the decision on whether or not access should be granted.
+	 */
+	private void logAccessRequest(DtoGateKeeperRequest wrapper, int statusCode)
+	{
+		String message = "";
+		if (statusCode == HttpStatus.SC_FORBIDDEN)
+		{
+			message = "Unauthenticated: " + wrapper;
+		}
+		else if (statusCode == HttpStatus.SC_UNAUTHORIZED)
+		{
+			message = "Access denied: " + wrapper;
+		}
+		else if (statusCode == HttpStatus.SC_OK)
+		{
+			message = "Access granted: " + wrapper;
+		}
+		LOGGER.info(message);
 	}
 }

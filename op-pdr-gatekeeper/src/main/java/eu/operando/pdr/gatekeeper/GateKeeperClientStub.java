@@ -2,6 +2,8 @@ package eu.operando.pdr.gatekeeper;
 
 import java.util.Vector;
 
+import eu.operando.LogOperando;
+
 /**
  * TODO - move when unit testing is possible. 
  */
@@ -31,15 +33,22 @@ public class GateKeeperClientStub implements GateKeeperClientI
 		return isOspAuthenticated;
 	}
 	@Override
-	public AuthorisationWrapper authoriseOsp(int ospId, int queryId, Vector<Integer> userIds)
+	public AuthorisationWrapper authoriseOsp(String ospId, String roleId, String queryId, Vector<String> userIds)
 	{
 		return new AuthorisationWrapper(queryPermissible, securityToken);
 	}
 	@Override
-	public String getDanUrlForQuery(int ospId, int queryId, Vector<Integer> userIds)
+	public String getDanUrlForQuery(String ospId, String roleId, String queryId, Vector<String> userIds)
 	{
 		return danUrl ;
 	}
+	@Override
+	public void logActivity(LogOperando logOperando)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
 	public void setOspAuthenticated(boolean isOspAuthenticated)
 	{
 		this.isOspAuthenticated = isOspAuthenticated;
@@ -56,5 +65,4 @@ public class GateKeeperClientStub implements GateKeeperClientI
 	{
 		this.danUrl = danUrl;
 	}
-
 }

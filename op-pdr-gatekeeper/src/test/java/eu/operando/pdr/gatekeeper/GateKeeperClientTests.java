@@ -9,90 +9,100 @@ import java.util.Vector;
 import javax.ws.rs.HttpMethod;
 
 import org.apache.http.HttpStatus;
+import org.glassfish.hk2.api.ServiceLocatorFactory.CreatePolicy;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.operando.ClientOperandoModuleExternalTests;
+import eu.operando.pdr.gatekeeper.message.DtoRightsManagementOspQuery;
 
 public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 {
 
-	private GateKeeperClient client = new GateKeeperClient(PROTOCOL_AND_HOST_HTTP_LOCALHOST, PROTOCOL_AND_HOST_HTTP_LOCALHOST,
-			PROTOCOL_AND_HOST_HTTP_LOCALHOST, PROTOCOL_AND_HOST_HTTP_LOCALHOST);
+	private GateKeeperClient client = new GateKeeperClient(ORIGIN_WIREMOCK, ORIGIN_WIREMOCK, ORIGIN_WIREMOCK, ORIGIN_WIREMOCK);
 	
 	/**
 	 * Authentication API
 	 */
 	@Test
-	public void testAuthoriseOsp_CorrectHttpRequest()
+	public void testIsOspAuthenticated_CorrectHttpRequest()
 	{
-		testAuthoriseOsp_CorrectHttpRequest(client);
+		testIsOspAuthenticated_CorrectHttpRequest(client);
 	}
 	@Test
-	public void testAuthoriseOsp_HandleValidTicketCorrectly()
+	public void testIsOspAuthenticated_HandleValidTicketCorrectly()
 	{
-		testAuthoriseOsp_HandleValidTicketCorrectly(client);
+		testIsOspAuthenticated_HandleValidTicketCorrectly(client);
 	}
 	@Test
-	public void testAuthoriseOsp_HandleInvalidTicketCorrectly()
+	public void testIsOspAuthenticated_HandleInvalidTicketCorrectly()
 	{
-		testAuthoriseOsp_HandleInvalidTicketCorrectly(client);
+		testIsOspAuthenticated_HandleInvalidTicketCorrectly(client);
 	}
 	
 	/**
 	 * Rights Management
 	 */
 	@Test
-	public void testIsQueryPermissible_CorrectHttpRequest()
+	public void testAuthoriseOsp_CorrectHttpRequest()
 	{
 		//Set up
-		int ospId = 1;
-		int queryId = 2;
-		Vector<Integer> userIds = new Vector<Integer>();
-		userIds.add(3);
-		userIds.add(4);
+		String ospId = "1";
+		String roleId = "2";
+		String queryId = "3";
+		Vector<String> userIds = new Vector<String>();
+		userIds.add("4");
+		userIds.add("5");
 		
+		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, "", HttpStatus.SC_OK);
 		//Exercise
-		client.authoriseOsp(ospId, queryId, userIds);
+		client.authoriseOsp(ospId, roleId, queryId, userIds);
 				
-		//Verify
-		OspQueryTransferObject transferObject = new OspQueryTransferObject(ospId, queryId, userIds);
+		//Verify that the transfer object sent is as expected.
+		DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery(ospId, roleId, queryId, userIds);
 		verifyCorrectHttpRequestWithoutQueryParams(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, transferObject);
 	}
 	@Test
-	public void testIsQueryPermissible_HandleQueryAllowedCorrectly()
+	public void testAuthoriseOsp_HandleQueryAllowedCorrectly()
 	{
 		//Set up
-		int ospId = 1;
-		int queryId = 2;
-		Vector<Integer> userIds = new Vector<Integer>();
-		userIds.add(3);
-		userIds.add(4);
+		String ospId = "1";
+		String roleId = "2";
+		String queryId = "3";
+		Vector<String> userIds = new Vector<String>();
+		userIds.add("4");
+		userIds.add("5");
+		
 		String strSecurityTokenExpected = "securityToken";
-		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, strSecurityTokenExpected, HttpStatus.SC_OK);
+		AuthorisationWrapper authorisationWrapperExpected = new AuthorisationWrapper(true, strSecurityTokenExpected);
+		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, authorisationWrapperExpected, HttpStatus.SC_OK);
 		
 		//Exercise
-		AuthorisationWrapper authorisationWrapper = client.authoriseOsp(ospId, queryId, userIds);
+		AuthorisationWrapper authorisationWrapperActual = client.authoriseOsp(ospId, roleId, queryId, userIds);
 		
 		//Verify
-		boolean isQueryPermissible = authorisationWrapper.isQueryPermissible();
+		boolean isQueryPermissible = authorisationWrapperActual.isQueryPermissible();
 		assertThat(isQueryPermissible, is(true));
 		
-		String securityTokenActual = authorisationWrapper.getSecurityToken();
+		String securityTokenActual = authorisationWrapperActual.getSecurityToken();
 		assertThat(securityTokenActual, is(equalTo(strSecurityTokenExpected)));
 	}
 	@Test
-	public void testIsQueryPermissible_HandleQueryNotAllowedCorrectly()
+	public void testAuthoriseOsp_HandleQueryNotAllowedCorrectly()
 	{
 		//Set up
-		int ospId = 1;
-		int queryId = 2;
-		Vector<Integer> userIds = new Vector<Integer>();
-		userIds.add(3);
-		userIds.add(4);
-		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, "", HttpStatus.SC_FORBIDDEN);
+		String ospId = "1";
+		String roleId = "2";
+		String queryId = "3";
+		Vector<String> userIds = new Vector<String>();
+		userIds.add("4");
+		userIds.add("5");
+		
+		AuthorisationWrapper authorisationWrapperExpected = new AuthorisationWrapper(false, "");
+		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, authorisationWrapperExpected, HttpStatus.SC_OK);
 		
 		//Exercise
-		AuthorisationWrapper authorisationWrapper = client.authoriseOsp(ospId, queryId, userIds);
+		AuthorisationWrapper authorisationWrapper = client.authoriseOsp(ospId, roleId, queryId, userIds);
 		
 		//Verify
 		boolean isQueryPermissible = authorisationWrapper.isQueryPermissible();
@@ -106,33 +116,35 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 	public void testGetDanUrlForQuery_CorrectHttpRequest()
 	{
 		//Set up
-		int ospId = 1;
-		int queryId = 2;
-		Vector<Integer> userIds = new Vector<Integer>();
-		userIds.add(3);
-		userIds.add(4);
+		String ospId = "1";
+		String roleId = "2";
+		String queryId = "3";
+		Vector<String> userIds = new Vector<String>();
+		userIds.add("4");
+		userIds.add("5");
 		
 		//Exercise
-		client.getDanUrlForQuery(ospId, queryId, userIds);
+		client.getDanUrlForQuery(ospId, roleId, queryId, userIds);
 		
 		//Verify
-		OspQueryTransferObject transferObject = new OspQueryTransferObject(ospId, queryId, userIds);
-		verifyCorrectHttpRequestWithoutQueryParams(HttpMethod.POST, ENDPOINT_DATA_ACCESS_NODE_DAN_URL_FOR_QUERY, transferObject);
+		DtoRightsManagementOspQuery dtoShouldSend = new DtoRightsManagementOspQuery(ospId, roleId, queryId, userIds);
+		verifyCorrectHttpRequestWithoutQueryParams(HttpMethod.POST, ENDPOINT_DATA_ACCESS_NODE_DAN_URL_FOR_QUERY, dtoShouldSend);
 	}
 	@Test
 	public void testGetDanUrlForQuery_HandleResponseCorrectly()
 	{
 		//Set up
-		int ospId = 1;
-		int queryId = 2;
-		Vector<Integer> userIds = new Vector<Integer>();
-		userIds.add(3);
-		userIds.add(4);
+		String ospId = "1";
+		String roleId = "2";
+		String queryId = "3";
+		Vector<String> userIds = new Vector<String>();
+		userIds.add("4");
+		userIds.add("5");
 		String danUrlExpected = "ABC-123";
 		stub(HttpMethod.POST, ENDPOINT_DATA_ACCESS_NODE_DAN_URL_FOR_QUERY, danUrlExpected, HttpStatus.SC_OK);
 		
 		//Exercise
-		String danUrlActual = client.getDanUrlForQuery(ospId, queryId, userIds);
+		String danUrlActual = client.getDanUrlForQuery(ospId, roleId, queryId, userIds);
 		
 		//Verify
 		assertThat(danUrlActual, is(equalTo(danUrlExpected)));
