@@ -64,7 +64,7 @@ public class GateKeeperWebService
 	{
 		//TODO - for testing. Remove when can unit test properly.
 		//client = new GateKeeperClientStub(false, false, "token", "url");
-		client = new GateKeeperClientStub(true, false, "token", "url");
+		//client = new GateKeeperClientStub(true, false, "token", "url");
 		//client = new GateKeeperClientStub(true, true, "token", "url");
 	}
 	
