@@ -73,8 +73,7 @@
 
 
 	<dependencies>
- 		<!-- GBE do not seem to be needed and otherwise the rise error
-    	<dependency>
+     	<dependency>
     		<groupId>eu.operando</groupId>
 			<artifactId>common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
@@ -86,7 +85,6 @@
 			<type>test-jar</type>
 			<scope>test</scope>
     	</dependency>
-    	 -->
     	 <dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
