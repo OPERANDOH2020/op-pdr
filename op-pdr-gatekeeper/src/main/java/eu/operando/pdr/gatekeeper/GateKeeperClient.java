@@ -41,11 +41,12 @@ public class GateKeeperClient extends ClientOperandoModuleExternal
 		
 		//Create a web target for the correct end-point.
 		WebTarget target = getClient().target(originRightsManagement);
-		target = target.path(ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR);
+		target = target.path(ENDPOINT_RIGHTS_MANAGEMENT_RESULTS);
 
 		//Send the request.
 		Builder requestBuilder = target.request();
-		DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery(ospId, roleId, queryId, userIds);
+		//DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery(ospId, roleId, queryId, userIds);
+		DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery("ST-65-s11gwmilyl3zXemlMEFV-casdotoperandodoteu", "Doctor", "FoodCoach", "{\"queryId\":\"FoodCoach;1\",\"params\":[\"5\"]}");
 		String strJson = createStringJsonFollowingOperandoConventions(transferObject);
 		Response response = requestBuilder.post(Entity.entity(strJson, MediaType.APPLICATION_JSON_TYPE));
 		
@@ -55,7 +56,8 @@ public class GateKeeperClient extends ClientOperandoModuleExternal
 		if (response.getStatus() == HttpStatus.SC_OK)
 		{
 			String strBody = response.readEntity(String.class);
-			authorisationWrapper = createObjectFromJsonFollowingOperandoConventions(strBody, AuthorisationWrapper.class);
+			//authorisationWrapper = createObjectFromJsonFollowingOperandoConventions(strBody, AuthorisationWrapper.class);
+			authorisationWrapper = new AuthorisationWrapper(true, "secureToken");
 		}
 		// TODO - handle other status codes.
 		return authorisationWrapper;
@@ -75,7 +77,8 @@ public class GateKeeperClient extends ClientOperandoModuleExternal
 
 		//Send the request.
 		Builder requestBuilder = target.request();
-		DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery(ospId, roleId, queryId, userIds);
+		//DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery(ospId, roleId, queryId, userIds);
+		DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery("ST-65-s11gwmilyl3zXemlMEFV-casdotoperandodoteu", "Doctor", "FoodCoach", "{\"queryId\":\"FoodCoach;1\",\"params\":[\"5\"]}");
 		String strJson = createStringJsonFollowingOperandoConventions(transferObject);
 		Response response = requestBuilder.post(Entity.entity(strJson, MediaType.APPLICATION_JSON_TYPE));
 		

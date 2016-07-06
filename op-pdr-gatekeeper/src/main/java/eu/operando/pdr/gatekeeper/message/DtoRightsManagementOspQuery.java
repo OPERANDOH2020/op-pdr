@@ -6,20 +6,20 @@ import com.google.gson.annotations.SerializedName;
 
 public class DtoRightsManagementOspQuery
 {
-	@SerializedName("OspId")
-	private String ospId = "";
-	@SerializedName("RoleId")
+	private String ticket = "";
+	@SerializedName("RoleID")
 	private String roleId = "";
-	@SerializedName("QueryId")
-	private String queryId = "";
-	@SerializedName("UserIds")
-	private Vector<String> userIds = new Vector<String>();
-
-	public DtoRightsManagementOspQuery(String ospId, String roleId, String queryId, Vector<String> userIds)
+	@SerializedName("ServiceID")
+	private String serviceId = "";
+	@SerializedName("ParamValues")
+	private String paramValues = "";
+	
+	public DtoRightsManagementOspQuery(String ticket, String roleId, String serviceId, String paramValues)
 	{
-		this.ospId = ospId;
+		super();
+		this.ticket = ticket;
 		this.roleId = roleId;
-		this.queryId = queryId;
-		this.userIds = userIds;		
+		this.serviceId = serviceId;
+		this.paramValues = paramValues;
 	}
 }

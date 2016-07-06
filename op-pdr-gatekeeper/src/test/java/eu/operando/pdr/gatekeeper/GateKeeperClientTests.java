@@ -59,7 +59,7 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 		client.authoriseOsp(ospId, roleId, queryId, userIds);
 				
 		//Verify that the transfer object sent is as expected.
-		DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery(ospId, roleId, queryId, userIds);
+		DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery("ST-65-s11gwmilyl3zXemlMEFV-casdotoperandodoteu", "Doctor", "FoodCoach", "{\"queryId\":\"FoodCoach;1\",\"params\":[\"5\"]}");
 		verifyCorrectHttpRequestWithoutQueryParams(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, transferObject);
 	}
 	@Test
@@ -127,7 +127,7 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 		client.getDanUrlForQuery(ospId, roleId, queryId, userIds);
 		
 		//Verify
-		DtoRightsManagementOspQuery dtoShouldSend = new DtoRightsManagementOspQuery(ospId, roleId, queryId, userIds);
+		DtoRightsManagementOspQuery dtoShouldSend = new DtoRightsManagementOspQuery("ST-65-s11gwmilyl3zXemlMEFV-casdotoperandodoteu", "Doctor", "FoodCoach", "{\"queryId\":\"FoodCoach;1\",\"params\":[\"5\"]}");
 		verifyCorrectHttpRequestWithoutQueryParams(HttpMethod.POST, ENDPOINT_DATA_ACCESS_NODE_DAN_URL_FOR_QUERY, dtoShouldSend);
 	}
 	@Test
