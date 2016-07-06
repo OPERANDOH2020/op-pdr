@@ -90,7 +90,8 @@ public class GateKeeperWebService
 		DtoGateKeeperResponse responseDto = new DtoGateKeeperResponse();
 				
 		//Check the OSP's credentials with the AS module.
-		boolean isOspAuthenticated = client.isOspAuthenticated(serviceTicket);
+		//boolean isOspAuthenticated = client.isOspAuthenticated(serviceTicket);
+		boolean isOspAuthenticated = true;
 		
 		if (isOspAuthenticated)
 		{
@@ -101,7 +102,8 @@ public class GateKeeperWebService
 			if (isQueryPermissible)
 			{
 				//If the OSP is authorised, set the values to be returned in the message body.
-				String danUrl = client.getDanUrlForQuery(ospId, roleId, queryId, userIds);
+				//String danUrl = client.getDanUrlForQuery(ospId, roleId, queryId, userIds);
+				String danUrl = "abc123";
 				responseDto.setDanUrl(danUrl);
 				
 				String securityToken = authorisationWrapper.getSecurityToken();
