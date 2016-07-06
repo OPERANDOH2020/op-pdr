@@ -21,12 +21,59 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-		</plugins>
-	</build>
+		<plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-war-plugin</artifactId>
+	        <version>2.1.1</version>
+			<configuration>
+				<!-- added to support right path -->
+				    <warName>${user.warName}</warName>				
+				<!-- end of addition -->
+			</configuration>
+      </plugin>
+		    <!-- added to support docker image creation -->
+			<plugin>
+				<groupId>org.jolokia</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.13.9</version> <!--  last version in https://mvnrepository.com/artifact/org.jolokia/docker-maven-plugin -->
+				<configuration>
+					<images>
+						<image>
+							<alias>eu.operando.pdr.gk</alias>
+							<name>${docker.repository.name}:${project.version}</name>
+							<build>
+								<from>tomcat:7</from> <!-- in our case we start from tomcat image -->
+								<assembly>
+								    <basedir>/</basedir>
+									<descriptor>docker-assembly.xml</descriptor>
+								</assembly>
+								<ports>
+									<port>8080</port>
+								</ports>
+							</build>
+							<run>
+								<namingStrategy>alias</namingStrategy>
+								<ports>
+									<port>${docker.logdb.port}:8080</port>
+								</ports>
+							</run>
+						</image>
+					</images>
+				</configuration>
+			</plugin>
+			<!-- end of addition -->
+  </plugins>
+	<resources>
+     	<resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+     	</resource>
+	</resources> 
+</build>
 
 
 	<dependencies>
-    	<dependency>
+     	<dependency>
     		<groupId>eu.operando</groupId>
 			<artifactId>common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
@@ -38,7 +85,7 @@
 			<type>test-jar</type>
 			<scope>test</scope>
     	</dependency>
-		<dependency>
+    	 <dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
@@ -76,9 +123,34 @@
 	<properties>
 		<jersey.version>2.2</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<as.baseurl>http://localhost:8080</as.baseurl>
-		<ldb.baseurl>http://localhost:8080</ldb.baseurl>
-		<rm.baseurl>http://localhost:8080</rm.baseurl>
-		<dan.baseurl>http://localhost:8080</dan.baseurl>
+    	<servlet-api-version>2.5</servlet-api-version>
+		<!-- added to support docker image creation -->
+		<docker.registry.name>localhost:5000/</docker.registry.name><!-- leave empty for docker hub; use e.g. "localhost:5000/" for a local docker registry -->
+        <docker.repository.name>${docker.registry.name}tecnalia/eu.operando.pdr.gk.server</docker.repository.name>
+        <docker.logdb.port>8110</docker.logdb.port>
+ 	    <user.warName>operando#pdr#gk</user.warName>
+ 	    <as.baseurl>http://localhost:8080</as.baseurl>
+ 	    <ldb.baseurl>http://localhost:8080</ldb.baseurl>
+ 	    <rm.baseurl>http://localhost:8080</rm.baseurl>
+ 	    <dan.baseurl>http://localhost:8080</dan.baseurl>
+	    <packaging.type>jar</packaging.type>
+        <!-- end of addition -->
 	</properties>
+	<profiles>
+		<profile>
+		  <id>jenkins-dev</id>
+		  <activation>
+            <property>
+                <name>ci</name>
+            </property>
+          </activation>
+		  <properties>
+	 	    <as.baseurl>http://10.0.0.5:8101/operando/core/as</as.baseurl>
+	 	    <ldb.baseurl>http://10.0.0.5:8090/operando/core/ldb</ldb.baseurl>
+	 	    <rm.baseurl>http://10.0.0.5:8102/operando/core/rm</rm.baseurl>
+	 	    <dan.baseurl>http://10.0.0.5:8111/operando/pdr/dan</dan.baseurl>
+		  </properties>
+		</profile>
+	</profiles>
 </project>
+
