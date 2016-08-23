@@ -52,7 +52,7 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 		userIds.add("4");
 		userIds.add("5");
 		
-		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, "", Status.OK.getStatusCode());
+		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, "", Status.OK);
 		//Exercise
 		client.authoriseOsp(ospId, roleId, queryId, userIds);
 				
@@ -73,7 +73,7 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 		
 		String strSecurityTokenExpected = "securityToken";
 		AuthorisationWrapper authorisationWrapperExpected = new AuthorisationWrapper(true, strSecurityTokenExpected);
-		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, authorisationWrapperExpected, Status.OK.getStatusCode());
+		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, authorisationWrapperExpected, Status.OK);
 		
 		//Exercise
 		AuthorisationWrapper authorisationWrapperActual = client.authoriseOsp(ospId, roleId, queryId, userIds);
@@ -97,7 +97,7 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 		userIds.add("5");
 		
 		AuthorisationWrapper authorisationWrapperExpected = new AuthorisationWrapper(false, "");
-		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, authorisationWrapperExpected, Status.OK.getStatusCode());
+		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, authorisationWrapperExpected, Status.OK);
 		
 		//Exercise
 		AuthorisationWrapper authorisationWrapper = client.authoriseOsp(ospId, roleId, queryId, userIds);
@@ -139,7 +139,7 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 		userIds.add("4");
 		userIds.add("5");
 		String danUrlExpected = "ABC-123";
-		stub(HttpMethod.POST, ENDPOINT_DATA_ACCESS_NODE_DAN_URL_FOR_QUERY, danUrlExpected, Status.OK.getStatusCode());
+		stub(HttpMethod.POST, ENDPOINT_DATA_ACCESS_NODE_DAN_URL_FOR_QUERY, danUrlExpected, Status.OK);
 		
 		//Exercise
 		String danUrlActual = client.getDanUrlForQuery(ospId, roleId, queryId, userIds);

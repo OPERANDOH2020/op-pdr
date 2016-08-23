@@ -85,7 +85,7 @@ public class GateKeeperWebService
 		Vector<String> userIds = wrapper.getUserIds();
 		
 		//Variables for the HTTP response that could be passed back to the OSP.
-		int statusCode = Status.OK.getStatusCode();
+		Status status = Status.OK;
 		DtoGateKeeperResponse responseDto = new DtoGateKeeperResponse();
 				
 		//Check the OSP's credentials with the AS module.
@@ -110,24 +110,24 @@ public class GateKeeperWebService
 			else
 			{
 				//If the OSP is unauthorised, return a forbidden code.
-				statusCode = Status.FORBIDDEN.getStatusCode();
+				status = Status.FORBIDDEN;
 			}
 		}
 		else
 		{
 			//If the authentication was unsuccessful, return an unauthorised code.
-			statusCode = Status.UNAUTHORIZED.getStatusCode();
+			status = Status.UNAUTHORIZED;
 		}
 		
 		//Build up the response.
-		ResponseBuilder responseBuilder = Response.status(statusCode);
-		if (statusCode == Status.OK.getStatusCode())
+		ResponseBuilder responseBuilder = Response.status(status);
+		if (status == Status.OK)
 		{
 			responseBuilder.entity(responseDto);
 		}
 		
 		//Return the response.
-		logAccessRequest(wrapper, statusCode);
+		logAccessRequest(wrapper, status);
 		return responseBuilder.build();
 	}
 	
@@ -136,21 +136,21 @@ public class GateKeeperWebService
 	 * 
 	 * @param wrapper
 	 * 		object containing information about the incoming request.
-	 * @param statusCode
+	 * @param status
 	 * 		indicates the decision on whether or not access should be granted.
 	 */
-	private void logAccessRequest(DtoGateKeeperRequest wrapper, int statusCode)
+	private void logAccessRequest(DtoGateKeeperRequest wrapper, Status status)
 	{
 		String message = "";
-		if (statusCode == Status.FORBIDDEN.getStatusCode())
+		if (status == Status.FORBIDDEN)
 		{
 			message = "Unauthenticated: " + wrapper;
 		}
-		else if (statusCode == Status.UNAUTHORIZED.getStatusCode())
+		else if (status == Status.UNAUTHORIZED)
 		{
 			message = "Access denied: " + wrapper;
 		}
-		else if (statusCode == Status.OK.getStatusCode())
+		else if (status == Status.OK)
 		{
 			message = "Access granted: " + wrapper;
 		}
