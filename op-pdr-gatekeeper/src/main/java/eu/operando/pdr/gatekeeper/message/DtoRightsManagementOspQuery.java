@@ -1,7 +1,5 @@
 package eu.operando.pdr.gatekeeper.message;
 
-import java.util.Vector;
-
 import com.google.gson.annotations.SerializedName;
 
 public class DtoRightsManagementOspQuery

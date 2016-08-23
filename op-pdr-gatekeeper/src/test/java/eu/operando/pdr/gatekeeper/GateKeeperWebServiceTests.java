@@ -10,7 +10,7 @@ import java.util.Vector;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.http.HttpStatus;
+import javax.ws.rs.core.Response.Status;
 import org.junit.Test;
 //import org.glassfish.jersey.test.JerseyTest;
 
@@ -33,7 +33,7 @@ public class GateKeeperWebServiceTests
 
 		//Verify
 		int statusCodeReturned = response.getStatus();
-		assertThat(statusCodeReturned, is(equalTo(HttpStatus.SC_UNAUTHORIZED)));
+		assertThat(statusCodeReturned, is(equalTo(Status.UNAUTHORIZED.getStatusCode())));
 	}
 	
 	@Test
@@ -48,7 +48,7 @@ public class GateKeeperWebServiceTests
 
 		//Verify
 		int statusCodeReturned = response.getStatus();
-		assertThat(statusCodeReturned, is(equalTo(HttpStatus.SC_FORBIDDEN)));
+		assertThat(statusCodeReturned, is(equalTo(Status.FORBIDDEN.getStatusCode())));
 	}
 	
 	@Test
@@ -68,7 +68,7 @@ public class GateKeeperWebServiceTests
 		//Verify
 		//Check the status code.
 		int statusCodeReturned = response.getStatus();
-		assertThat(statusCodeReturned, is(equalTo(HttpStatus.SC_OK)));
+		assertThat(statusCodeReturned, is(equalTo(Status.OK.getStatusCode())));
 		
 		//Check the message body.
 		DtoGateKeeperResponse responseDtoActual = response.readEntity(DtoGateKeeperResponse.class);

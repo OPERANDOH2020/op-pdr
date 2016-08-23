@@ -2,13 +2,13 @@ package eu.operando.pdr.gatekeeper;
 
 import java.util.Vector;
 
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
-import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,6 +27,7 @@ public class GateKeeperClient extends ClientOperandoModuleExternal
 			String originDataAccessNode)
 	{
 		super(originAuthenticationApi, originLogDb);
+		originRightsManagement = "http://server02tecnalia.westeurope.cloudapp.azure.com:8102/operando/core/rm";
 		this.originRightsManagement = originRightsManagement;
 		this.originDataAccessNode = originDataAccessNode;
 	}
@@ -46,14 +47,14 @@ public class GateKeeperClient extends ClientOperandoModuleExternal
 		//Send the request.
 		Builder requestBuilder = target.request();
 		//DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery(ospId, roleId, queryId, userIds);
-		DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery("ST-65-s11gwmilyl3zXemlMEFV-casdotoperandodoteu", "Doctor", "FoodCoach", "{\"queryId\":\"FoodCoach;1\",\"params\":[\"5\"]}");
+		DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery("ST-65-s11gwmilyl3zXemlMEFV-casdotoperandodoteu", "Doctor", "FoodCoach", "{\"queryId\":\"FoodCoach;1\",\"params\":[\"matt.gallagher\"]}");
 		String strJson = createStringJsonFollowingOperandoConventions(transferObject);
 		Response response = requestBuilder.post(Entity.entity(strJson, MediaType.APPLICATION_JSON_TYPE));
 		
 		logResponseInfo("RM", response);
 		
 		//Interpret the response.
-		if (response.getStatus() == HttpStatus.SC_OK)
+		if (response.getStatus() == Status.OK.getStatusCode())
 		{
 			String strBody = response.readEntity(String.class);
 			//authorisationWrapper = createObjectFromJsonFollowingOperandoConventions(strBody, AuthorisationWrapper.class);

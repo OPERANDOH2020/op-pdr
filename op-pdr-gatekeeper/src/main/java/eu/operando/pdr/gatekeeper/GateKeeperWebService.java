@@ -9,12 +9,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 
-import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import eu.operando.LogOperando;
 import eu.operando.Utils;
 import eu.operando.pdr.gatekeeper.message.DtoGateKeeperRequest;
 import eu.operando.pdr.gatekeeper.message.DtoGateKeeperResponse;
@@ -86,12 +85,11 @@ public class GateKeeperWebService
 		Vector<String> userIds = wrapper.getUserIds();
 		
 		//Variables for the HTTP response that could be passed back to the OSP.
-		int statusCode = HttpStatus.SC_OK;
+		int statusCode = Status.OK.getStatusCode();
 		DtoGateKeeperResponse responseDto = new DtoGateKeeperResponse();
 				
 		//Check the OSP's credentials with the AS module.
-		//boolean isOspAuthenticated = client.isOspAuthenticated(serviceTicket);
-		boolean isOspAuthenticated = true;
+		boolean isOspAuthenticated = client.isOspAuthenticated(serviceTicket);
 		
 		if (isOspAuthenticated)
 		{
@@ -112,18 +110,18 @@ public class GateKeeperWebService
 			else
 			{
 				//If the OSP is unauthorised, return a forbidden code.
-				statusCode = HttpStatus.SC_FORBIDDEN;
+				statusCode = Status.FORBIDDEN.getStatusCode();
 			}
 		}
 		else
 		{
 			//If the authentication was unsuccessful, return an unauthorised code.
-			statusCode = HttpStatus.SC_UNAUTHORIZED;
+			statusCode = Status.UNAUTHORIZED.getStatusCode();
 		}
 		
 		//Build up the response.
 		ResponseBuilder responseBuilder = Response.status(statusCode);
-		if (statusCode == HttpStatus.SC_OK)
+		if (statusCode == Status.OK.getStatusCode())
 		{
 			responseBuilder.entity(responseDto);
 		}
@@ -144,15 +142,15 @@ public class GateKeeperWebService
 	private void logAccessRequest(DtoGateKeeperRequest wrapper, int statusCode)
 	{
 		String message = "";
-		if (statusCode == HttpStatus.SC_FORBIDDEN)
+		if (statusCode == Status.FORBIDDEN.getStatusCode())
 		{
 			message = "Unauthenticated: " + wrapper;
 		}
-		else if (statusCode == HttpStatus.SC_UNAUTHORIZED)
+		else if (statusCode == Status.UNAUTHORIZED.getStatusCode())
 		{
 			message = "Access denied: " + wrapper;
 		}
-		else if (statusCode == HttpStatus.SC_OK)
+		else if (statusCode == Status.OK.getStatusCode())
 		{
 			message = "Access granted: " + wrapper;
 		}

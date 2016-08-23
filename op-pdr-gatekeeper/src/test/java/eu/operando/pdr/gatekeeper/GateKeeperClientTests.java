@@ -1,16 +1,14 @@
 package eu.operando.pdr.gatekeeper;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.Vector;
 
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.core.Response.Status;
 
-import org.apache.http.HttpStatus;
-import org.glassfish.hk2.api.ServiceLocatorFactory.CreatePolicy;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.operando.ClientOperandoModuleExternalTests;
@@ -54,13 +52,13 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 		userIds.add("4");
 		userIds.add("5");
 		
-		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, "", HttpStatus.SC_OK);
+		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, "", Status.OK.getStatusCode());
 		//Exercise
 		client.authoriseOsp(ospId, roleId, queryId, userIds);
 				
 		//Verify that the transfer object sent is as expected.
 		DtoRightsManagementOspQuery transferObject = new DtoRightsManagementOspQuery("ST-65-s11gwmilyl3zXemlMEFV-casdotoperandodoteu", "Doctor", "FoodCoach", "{\"queryId\":\"FoodCoach;1\",\"params\":[\"5\"]}");
-		verifyCorrectHttpRequestWithoutQueryParams(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, transferObject);
+		verifyCorrectHttpRequestNoQueryParams(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, transferObject);
 	}
 	@Test
 	public void testAuthoriseOsp_HandleQueryAllowedCorrectly()
@@ -75,7 +73,7 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 		
 		String strSecurityTokenExpected = "securityToken";
 		AuthorisationWrapper authorisationWrapperExpected = new AuthorisationWrapper(true, strSecurityTokenExpected);
-		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, authorisationWrapperExpected, HttpStatus.SC_OK);
+		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, authorisationWrapperExpected, Status.OK.getStatusCode());
 		
 		//Exercise
 		AuthorisationWrapper authorisationWrapperActual = client.authoriseOsp(ospId, roleId, queryId, userIds);
@@ -99,7 +97,7 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 		userIds.add("5");
 		
 		AuthorisationWrapper authorisationWrapperExpected = new AuthorisationWrapper(false, "");
-		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, authorisationWrapperExpected, HttpStatus.SC_OK);
+		stub(HttpMethod.POST, ENDPOINT_RIGHTS_MANAGEMENT_QUERY_EVALUATOR, authorisationWrapperExpected, Status.OK.getStatusCode());
 		
 		//Exercise
 		AuthorisationWrapper authorisationWrapper = client.authoriseOsp(ospId, roleId, queryId, userIds);
@@ -128,7 +126,7 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 		
 		//Verify
 		DtoRightsManagementOspQuery dtoShouldSend = new DtoRightsManagementOspQuery("ST-65-s11gwmilyl3zXemlMEFV-casdotoperandodoteu", "Doctor", "FoodCoach", "{\"queryId\":\"FoodCoach;1\",\"params\":[\"5\"]}");
-		verifyCorrectHttpRequestWithoutQueryParams(HttpMethod.POST, ENDPOINT_DATA_ACCESS_NODE_DAN_URL_FOR_QUERY, dtoShouldSend);
+		verifyCorrectHttpRequestNoQueryParams(HttpMethod.POST, ENDPOINT_DATA_ACCESS_NODE_DAN_URL_FOR_QUERY, dtoShouldSend);
 	}
 	@Test
 	public void testGetDanUrlForQuery_HandleResponseCorrectly()
@@ -141,7 +139,7 @@ public class GateKeeperClientTests extends ClientOperandoModuleExternalTests
 		userIds.add("4");
 		userIds.add("5");
 		String danUrlExpected = "ABC-123";
-		stub(HttpMethod.POST, ENDPOINT_DATA_ACCESS_NODE_DAN_URL_FOR_QUERY, danUrlExpected, HttpStatus.SC_OK);
+		stub(HttpMethod.POST, ENDPOINT_DATA_ACCESS_NODE_DAN_URL_FOR_QUERY, danUrlExpected, Status.OK.getStatusCode());
 		
 		//Exercise
 		String danUrlActual = client.getDanUrlForQuery(ospId, roleId, queryId, userIds);
