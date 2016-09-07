@@ -3,90 +3,56 @@ package eu.operando.pdr.gatekeeper;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 import java.util.Vector;
 
 import javax.ws.rs.core.Response;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
 import javax.ws.rs.core.Response.Status;
+
 import org.junit.Test;
-//import org.glassfish.jersey.test.JerseyTest;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import eu.operando.moduleclients.ClientAuthenticationService;
+import eu.operando.moduleclients.ClientDataAccessNode;
+import eu.operando.moduleclients.ClientLogDb;
 import eu.operando.pdr.gatekeeper.message.DtoGateKeeperRequest;
-import eu.operando.pdr.gatekeeper.message.DtoGateKeeperResponse;
 
+@RunWith(MockitoJUnitRunner.class)
 public class GateKeeperWebServiceTests
 {
-	GateKeeperClientStub clientStub = new GateKeeperClientStub();
-	GateKeeperWebService webService = new GateKeeperWebService(clientStub);
+	@Mock
+	private ClientAuthenticationService clientAuthenticationService;
+	
+	@Mock
+	private ClientLogDb clientLogDb;
+	
+	@Mock
+	private ClientDataAccessNode clientDataAccessNode;
+	
+	@InjectMocks
+	private GateKeeperWebService webService = new GateKeeperWebService();
 	
 	@Test
 	public void testProcessDataAccessRequest_OspUnauthenticated_ReturnsStatusCodeUnauthorised()
 	{
 		//Set up
-		clientStub.setOspAuthenticated(false);
+		when(clientAuthenticationService.isOspAuthenticated(anyString())).thenReturn(false);
 
 		//Exercise
-		Response response = exerciseHandleOspDataAccessRequestWithDummyRequestWrapper();
-
-		//Verify
-		int statusCodeReturned = response.getStatus();
-		assertThat(statusCodeReturned, is(equalTo(Status.UNAUTHORIZED.getStatusCode())));
-	}
-	
-	@Test
-	public void testProcessDataAccessRequest_OspAuthenticated_QueryNotAllowed_ReturnsStatusCodeForbidden()
-	{
-		//Set up
-		clientStub.setOspAuthenticated(true);
-		clientStub.setQueryPermissible(false);
-
-		//Exercise
-		Response response = exerciseHandleOspDataAccessRequestWithDummyRequestWrapper();
-
-		//Verify
-		int statusCodeReturned = response.getStatus();
-		assertThat(statusCodeReturned, is(equalTo(Status.FORBIDDEN.getStatusCode())));
-	}
-	
-	@Test
-	public void testProcessDataAccessRequest_OspAuthenticated_QueryAllowed_ReturnsStatusCodeOkDanUrlAndSecurityToken()
-	{
-		//Set up
-		clientStub.setOspAuthenticated(true);
-		clientStub.setQueryPermissible(true);
-		String danUrl = "ABC-123";
-		clientStub.setDanUrl(danUrl);
-		String securityToken = "securityToken";
-		clientStub.setSecurityToken(securityToken);
-
-		//Exercise
-		Response response = exerciseHandleOspDataAccessRequestWithDummyRequestWrapper();
-
-		//Verify
-		//Check the status code.
-		int statusCodeReturned = response.getStatus();
-		assertThat(statusCodeReturned, is(equalTo(Status.OK.getStatusCode())));
-		
-		//Check the message body.
-		DtoGateKeeperResponse responseDtoActual = response.readEntity(DtoGateKeeperResponse.class);
-		DtoGateKeeperResponse responseDtoExpected = new DtoGateKeeperResponse();
-		responseDtoExpected.setDanUrl(danUrl);
-		responseDtoExpected.setSecurityToken(securityToken);
-		boolean isDtoAsExpected = EqualsBuilder.reflectionEquals(responseDtoActual, responseDtoExpected);
-		assertTrue("The web service should pass back the security token and DAN URL it receives from the client.", isDtoAsExpected);
-	}
-
-	public Response exerciseHandleOspDataAccessRequestWithDummyRequestWrapper()
-	{
 		DtoGateKeeperRequest requestWrapper = new DtoGateKeeperRequest();
 		requestWrapper.setServiceTicket("");
 		requestWrapper.setOspId("1");
 		requestWrapper.setQueryId("2");
 		requestWrapper.setUserIds(new Vector<String>());
 		Response response = webService.handleOspDataAccessRequest(requestWrapper);
-		return response;
+
+		//Verify
+		int statusCodeReturned = response.getStatus();
+		assertThat(statusCodeReturned, is(equalTo(Status.UNAUTHORIZED.getStatusCode())));
 	}
 }
