@@ -20,9 +20,9 @@ repositoryManagers:
   schema: https
   host: snf-706921.vm.okeanos.grnet.gr
   port: 8443
-  serviceRoot: /dan
+  serviceRoot: /op-pdr-rpm/
 - name: AMI
   schema: https
   host: snf-706921.vm.okeanos.grnet.gr
   port: 8443
-  serviceRoot: /dan
+  serviceRoot: /op-pdr-rpm/

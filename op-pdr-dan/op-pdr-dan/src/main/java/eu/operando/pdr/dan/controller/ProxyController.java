@@ -60,7 +60,7 @@ public class ProxyController {
 			}
 		}
 		
-		String uri = rm.getSchema().toString() + "://" +  rm.getHost() + ":" + rm.getPort() + request.getRequestURI().substring(request.getContextPath().length()) + (request.getQueryString()!=null ? "?" + request.getQueryString() : "");
+		String uri = rm.getSchema().toString() + "://" +  rm.getHost() + ":" + rm.getPort() + rm.getServiceRoot() + request.getRequestURI().substring(request.getContextPath().length()) + (request.getQueryString()!=null ? "?" + request.getQueryString() : "");
 				
 		HttpGet httpget=null;
 		CloseableHttpResponse  result=null;
@@ -118,7 +118,7 @@ public class ProxyController {
 			}
 		}
 		
-		String uri = rm.getSchema().toString() + "://" +  rm.getHost() + ":" + rm.getPort() + request.getRequestURI().substring(request.getContextPath().length()) + (request.getQueryString()!=null ? "?" + request.getQueryString() : "");
+		String uri = rm.getSchema().toString() + "://" +  rm.getHost() + ":" + rm.getPort() + rm.getServiceRoot() + request.getRequestURI().substring(request.getContextPath().length()) + (request.getQueryString()!=null ? "?" + request.getQueryString() : "");
 				
 		StringBuffer json = new StringBuffer();
 		String line = null;
