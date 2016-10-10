@@ -36,6 +36,9 @@ import eu.operando.pdr.dan.cache.RepositoryManager;
 import eu.operando.pdr.dan.cache.RepositoryManagerCache;
 import eu.operando.pdr.dan.constants.CustomHttpHeaders;
 import eu.operando.pdr.dan.utils.Helper;
+import java.util.logging.Level;
+import org.apache.log4j.Logger;
+
 
 @RestController
 @RequestMapping(value="/**")
@@ -46,7 +49,9 @@ public class ProxyController {
 	
 	@Autowired
 	CloseableHttpClient httpClient;
-		
+        
+        private static final Logger LOGGER = Logger.getLogger( ProxyController.class.getName() );
+        
 	@RequestMapping(method=RequestMethod.GET)
 	public void doGet(HttpServletRequest request, HttpServletResponse response){
 		
@@ -54,9 +59,11 @@ public class ProxyController {
 		if (rm == null){
 			try {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "The requested OSP [" + request.getHeader(CustomHttpHeaders.OSP_IDENTIFIER.toString()) + "] not found.");
-				return;
+				LOGGER.error("The requested OSP [" + request.getHeader(CustomHttpHeaders.OSP_IDENTIFIER.toString()) + "] not found.");
+                                return;
 			} catch (IOException e) {			
 				e.printStackTrace();
+                                LOGGER.warn(e.toString(), e );
 			}
 		}
 		
@@ -64,7 +71,8 @@ public class ProxyController {
 				
 		HttpGet httpget=null;
 		CloseableHttpResponse  result=null;
-		try{						
+		try{	
+                        LOGGER.info("Opening new GET http connection for uri: " +uri);
 			httpget = new HttpGet(uri);
 			
 			//add headers
@@ -78,7 +86,7 @@ public class ProxyController {
 					httpget.addHeader(name, value);
 				}				
 			}
-			
+			LOGGER.info("Executing GET for: " +uri);
 			result= httpClient.execute(httpget);
 			
 			HttpEntity entity = result.getEntity();
@@ -97,24 +105,30 @@ public class ProxyController {
 				Helper.stream(entity.getContent(), response.getOutputStream());
 			}			
 		} catch(Exception ex){
-			ex.printStackTrace();			
+			ex.printStackTrace();
+                        LOGGER.warn(ex.toString(), ex );
 		} finally{
 			try {
 				result.close();
-			} catch (IOException e) {}
+			} catch (IOException e) {
+                        LOGGER.warn(e.toString(), e );
+                        }
 		}
+                
+                LOGGER.info("Execution of GET completed for: " +uri);
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public void doPost(HttpServletRequest request, HttpServletResponse response){
 		
-		RepositoryManager rm = cache.get(request.getHeader(CustomHttpHeaders.OSP_IDENTIFIER.toString()));		
+                RepositoryManager rm = cache.get(request.getHeader(CustomHttpHeaders.OSP_IDENTIFIER.toString()));		
 		if (rm == null){
 			try {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "The requested OSP [" + request.getHeader(CustomHttpHeaders.OSP_IDENTIFIER.toString()) + "] not found.");
 				return;
 			} catch (IOException e) {			
 				e.printStackTrace();
+                                LOGGER.warn(e.toString(), e );
 			}
 		}
 		
@@ -128,11 +142,14 @@ public class ProxyController {
 				json.append(line);
 		} catch (Exception e) { 
 			e.printStackTrace();
+                        LOGGER.warn(e.toString(), e );
 		}		
+		
 		
 		HttpPost httppost=null;
 		CloseableHttpResponse  result=null;		
 		try{			
+                        LOGGER.info("Opening new POST http connection for uri: " +uri);
 			httppost = new HttpPost(uri);
 			
 			//append headers
@@ -156,6 +173,7 @@ public class ProxyController {
 			httppost.addHeader("content-type", "application/json;odata=verbose");
 			httppost.setEntity(params);
 			
+                        LOGGER.info("Executing POST for: " +uri);
 			result= httpClient.execute(httppost);
 			
 			HttpEntity entity = result.getEntity();
@@ -175,12 +193,16 @@ public class ProxyController {
 			}			
 		} catch(Exception ex){
 			ex.printStackTrace();
+                        LOGGER.warn(ex.toString(), ex);
 			
 		} finally{
 			try {
 				result.close();
-			} catch (IOException e) {}
+			} catch (IOException e) {
+                        LOGGER.warn(e.toString(), e );
+                        }
 		}	
+                 LOGGER.info("Execution of POST completed for: " +uri);
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT)
