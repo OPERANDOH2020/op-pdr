@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>eu.operando</groupId>
-	<artifactId>op-pdr-dan-parent</artifactId>
+	<artifactId>op-pdr-rpm-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
+
+	<name>Built-in repository manager</name>
+	<description>A repository manager that publishes, as oData service, the content of Operando's built-in, Epsos compliant, database</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,9 +18,11 @@
 	</properties>
 
 	<modules>
-		<module>op-pdr-dan</module>
+		<module>op-pdr-rpm</module>
+		<!-- 
 		<module>op-interfaces-aapi-ws</module>
 		<module>core-logdb-ws</module>
+		 -->
 	</modules>
 
 	<build>
