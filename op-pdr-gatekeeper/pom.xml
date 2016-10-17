@@ -44,4 +44,38 @@
 		</dependency>
 	</dependencies>
 
+	<properties>
+		<jersey.version>2.2</jersey.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<servlet-api-version>2.5</servlet-api-version>
+		<!-- added to support docker image creation -->
+		<docker.registry.name>localhost:5000/</docker.registry.name><!-- leave 
+			empty for docker hub; use e.g. "localhost:5000/" for a local docker registry -->
+		<docker.repository.name>${docker.registry.name}tecnalia/eu.operando.pdr.gk.server</docker.repository.name>
+		<docker.logdb.port>8110</docker.logdb.port>
+		<user.warName>operando#pdr#gk</user.warName>
+		<as.baseurl>http://localhost:8080</as.baseurl>
+		<dan.baseurl>http://localhost:8080</dan.baseurl>
+		<as.gkusername>operando</as.gkusername>
+		<as.gkpassword>1234</as.gkpassword>
+		<packaging.type>jar</packaging.type>
+		<!-- end of addition -->
+	</properties>
+	
+	<profiles>
+		<profile>
+			<id>jenkins-dev</id>
+			<activation>
+				<property>
+					<name>ci</name>
+				</property>
+			</activation>
+			<properties>
+				<as.baseurl>http://10.0.0.5:8101/operando/core/as</as.baseurl>
+				<dan.baseurl>http://10.0.0.5:8111/operando/pdr/dan</dan.baseurl>
+				<as.gkusername>operando</as.gkusername>
+				<as.gkpassword>1234</as.gkpassword>
+			</properties>
+		</profile>
+	</profiles>
 </project>
