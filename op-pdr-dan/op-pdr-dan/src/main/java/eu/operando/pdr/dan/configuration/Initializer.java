@@ -14,7 +14,13 @@
 
 package eu.operando.pdr.dan.configuration;
 
+import javax.servlet.Filter;
+
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import eu.operando.pdr.dan.filter.AuthenticationFilter;
+import eu.operando.pdr.dan.filter.HeadersCheckerFilter;
+import eu.operando.pdr.dan.filter.ResponsibleCheckerFilter;
 
 public class Initializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 	 
@@ -32,5 +38,9 @@ public class Initializer extends AbstractAnnotationConfigDispatcherServletInitia
     protected String[] getServletMappings() {
         return new String[] { "/" };
     }
- 
+
+	@Override
+	protected Filter[] getServletFilters() {		
+		return new Filter[] {new ResponsibleCheckerFilter(), new HeadersCheckerFilter(), new AuthenticationFilter()};
+	}
 }

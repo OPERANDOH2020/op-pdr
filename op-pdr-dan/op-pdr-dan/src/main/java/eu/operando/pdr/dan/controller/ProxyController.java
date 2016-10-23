@@ -36,6 +36,8 @@ import eu.operando.pdr.dan.cache.RepositoryManager;
 import eu.operando.pdr.dan.cache.RepositoryManagerCache;
 import eu.operando.pdr.dan.constants.CustomHttpHeaders;
 import eu.operando.pdr.dan.utils.Helper;
+import eu.operando.pdr.dan.utils.Log;
+import io.swagger.client.model.LogRequest;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
@@ -50,8 +52,7 @@ public class ProxyController {
 	@Autowired
 	CloseableHttpClient httpClient;
         
-        private static final Logger LOGGER = Logger.getLogger( ProxyController.class.getName() );
-        
+        Log log = new Log();
 	@RequestMapping(method=RequestMethod.GET)
 	public void doGet(HttpServletRequest request, HttpServletResponse response){
 		
@@ -59,11 +60,12 @@ public class ProxyController {
 		if (rm == null){
 			try {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "The requested OSP [" + request.getHeader(CustomHttpHeaders.OSP_IDENTIFIER.toString()) + "] not found.");
-				LOGGER.error("The requested OSP [" + request.getHeader(CustomHttpHeaders.OSP_IDENTIFIER.toString()) + "] not found.");
+				log.logMe(LogRequest.LogDataTypeEnum.WARN, "", "The requested OSP [" + request.getHeader(CustomHttpHeaders.OSP_IDENTIFIER.toString()) + "] not found.", LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
                                 return;
 			} catch (IOException e) {			
 				e.printStackTrace();
-                                LOGGER.warn(e.toString(), e );
+                                log.logMe(LogRequest.LogDataTypeEnum.WARN, "", e.toString(), LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                                
 			}
 		}
 		
@@ -72,8 +74,8 @@ public class ProxyController {
 		HttpGet httpget=null;
 		CloseableHttpResponse  result=null;
 		try{	
-                        LOGGER.info("Opening new GET http connection for uri: " +uri);
-			httpget = new HttpGet(uri);
+                        log.logMe(LogRequest.LogDataTypeEnum.INFO, "", "Opening new GET http connection for uri: " +uri, LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                        httpget = new HttpGet(uri);
 			
 			//add headers
 			Enumeration headerNames = request.getHeaderNames();
@@ -86,8 +88,9 @@ public class ProxyController {
 					httpget.addHeader(name, value);
 				}				
 			}
-			LOGGER.info("Executing GET for: " +uri);
-			result= httpClient.execute(httpget);
+			log.logMe(LogRequest.LogDataTypeEnum.INFO, "", "Executing GET for: " +uri, LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                        
+                        result= httpClient.execute(httpget);
 			
 			HttpEntity entity = result.getEntity();
 			/*
@@ -106,16 +109,18 @@ public class ProxyController {
 			}			
 		} catch(Exception ex){
 			ex.printStackTrace();
-                        LOGGER.warn(ex.toString(), ex );
+                        log.logMe(LogRequest.LogDataTypeEnum.WARN, "", ex.toString(), LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                        
 		} finally{
 			try {
 				result.close();
 			} catch (IOException e) {
-                        LOGGER.warn(e.toString(), e );
+                        log.logMe(LogRequest.LogDataTypeEnum.WARN, "", e.toString(), LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
                         }
 		}
                 
-                LOGGER.info("Execution of GET completed for: " +uri);
+                log.logMe(LogRequest.LogDataTypeEnum.INFO, "", "Execution of GET completed for: " +uri, LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                        
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
@@ -128,7 +133,8 @@ public class ProxyController {
 				return;
 			} catch (IOException e) {			
 				e.printStackTrace();
-                                LOGGER.warn(e.toString(), e );
+                                log.logMe(LogRequest.LogDataTypeEnum.WARN, "", e.toString(), LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                
 			}
 		}
 		
@@ -142,14 +148,16 @@ public class ProxyController {
 				json.append(line);
 		} catch (Exception e) { 
 			e.printStackTrace();
-                        LOGGER.warn(e.toString(), e );
+                        log.logMe(LogRequest.LogDataTypeEnum.WARN, "", e.toString(), LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                
 		}		
 		
 		
 		HttpPost httppost=null;
 		CloseableHttpResponse  result=null;		
 		try{			
-                        LOGGER.info("Opening new POST http connection for uri: " +uri);
+                        log.logMe(LogRequest.LogDataTypeEnum.INFO, "", "Opening new POST http connection for uri: " +uri, LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                
 			httppost = new HttpPost(uri);
 			
 			//append headers
@@ -173,7 +181,8 @@ public class ProxyController {
 			httppost.addHeader("content-type", "application/json;odata=verbose");
 			httppost.setEntity(params);
 			
-                        LOGGER.info("Executing POST for: " +uri);
+                        log.logMe(LogRequest.LogDataTypeEnum.INFO, "", "Executing POST for: " +uri, LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                
 			result= httpClient.execute(httppost);
 			
 			HttpEntity entity = result.getEntity();
@@ -193,16 +202,19 @@ public class ProxyController {
 			}			
 		} catch(Exception ex){
 			ex.printStackTrace();
-                        LOGGER.warn(ex.toString(), ex);
+                        log.logMe(LogRequest.LogDataTypeEnum.WARN, "", ex.toString(), LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                
 			
 		} finally{
 			try {
 				result.close();
 			} catch (IOException e) {
-                        LOGGER.warn(e.toString(), e );
+                            log.logMe(LogRequest.LogDataTypeEnum.WARN, "", e.toString(), LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                
                         }
 		}	
-                 LOGGER.info("Execution of POST completed for: " +uri);
+                log.logMe(LogRequest.LogDataTypeEnum.INFO, "", "Execution of POST completed for: " +uri, LogRequest.LogPriorityEnum.NORMAL.toString(), "op-pdr-dan");
+                
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT)
