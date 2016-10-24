@@ -83,6 +83,7 @@
 			<artifactId>common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>eu.operando</groupId>
 			<artifactId>test-dependencies</artifactId>
@@ -90,6 +91,7 @@
 			<type>pom</type>
 			<scope>test</scope>
 		</dependency>
+		 -->
 	</dependencies>
 
 	<properties>
