@@ -21,8 +21,56 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-		</plugins>
-	</build>
+		<plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-war-plugin</artifactId>
+	        <version>2.1.1</version>
+			<configuration>
+				<!-- added to support right path -->
+				    <warName>${user.warName}</warName>				
+				<!-- end of addition -->
+			</configuration>
+      </plugin>
+		    <!-- added to support docker image creation -->
+			<plugin>
+				<groupId>org.jolokia</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.13.9</version> <!--  last version in https://mvnrepository.com/artifact/org.jolokia/docker-maven-plugin -->
+				<configuration>
+					<images>
+						<image>
+							<alias>eu.operando.pdr.gk</alias>
+							<name>${docker.repository.name}:${project.version}</name>
+							<build>
+								<from>tomcat:7</from> <!-- in our case we start from tomcat image -->
+								<assembly>
+								    <basedir>/</basedir>
+									<descriptor>docker-assembly.xml</descriptor>
+								</assembly>
+								<ports>
+									<port>8080</port>
+								</ports>
+							</build>
+							<run>
+								<namingStrategy>alias</namingStrategy>
+								<ports>
+									<port>${docker.logdb.port}:8080</port>
+								</ports>
+							</run>
+						</image>
+					</images>
+				</configuration>
+			</plugin>
+			<!-- end of addition -->
+  </plugins>
+	<resources>
+     	<resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+     	</resource>
+	</resources> 
+</build>
+
 
 	<dependencies>
 		<dependency>
@@ -56,6 +104,8 @@
 		<user.warName>operando#pdr#gk</user.warName>
 		<as.baseurl>http://localhost:8080</as.baseurl>
 		<dan.baseurl>http://localhost:8080</dan.baseurl>
+		<ldb.baseurl>http://localhost:8080</ldb.baseurl>
+ 	    <rm.baseurl>http://localhost:8080</rm.baseurl>
 		<as.gkusername>operando</as.gkusername>
 		<as.gkpassword>1234</as.gkpassword>
 		<packaging.type>jar</packaging.type>
@@ -73,6 +123,8 @@
 			<properties>
 				<as.baseurl>http://10.0.0.5:8101/operando/core/as</as.baseurl>
 				<dan.baseurl>http://10.0.0.5:8111/operando/pdr/dan</dan.baseurl>
+				<ldb.baseurl>http://10.0.0.5:8090/operando/core/ldb</ldb.baseurl>
+	 	        <rm.baseurl>http://10.0.0.5:8102/operando/core/rm</rm.baseurl>
 				<as.gkusername>operando</as.gkusername>
 				<as.gkpassword>1234</as.gkpassword>
 			</properties>
