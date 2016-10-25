@@ -34,6 +34,7 @@ import eu.operando.moduleclients.ClientDataAccessNode;
 @RunWith(Parameterized.class)
 public class GkWebServiceImplTests
 {
+	private static final String HEADER_NAME_OSP_ID = "osp-identifier";
 	// Variables to test
 	private static final String HEADER_NAME_SERVICE_TICKET = "service-ticket";
 	private static final String HEADER_NAME_HOST = "host";
@@ -94,7 +95,7 @@ public class GkWebServiceImplTests
 		stubbedHeadersFromCaller.add("key1", "value1");
 		stubbedHeadersFromCaller.add("key2", "value2");
 		stubbedHeadersFromCaller.add(HEADER_NAME_HOST, "www.operando.eu");
-		stubbedHeadersFromCaller.add("osp-identifier", "OSP1");
+		stubbedHeadersFromCaller.add(HEADER_NAME_OSP_ID, "OSP1");
 		stubbedHeadersFromCaller.add(HEADER_NAME_SERVICE_TICKET, SERVICE_TICKET_CALLER);
 		when(mockHeaders.getRequestHeaders()).thenReturn(stubbedHeadersFromCaller);
 
