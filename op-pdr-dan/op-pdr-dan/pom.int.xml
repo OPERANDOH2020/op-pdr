@@ -38,7 +38,7 @@
 		<!-- added to support docker image creation -->
 		<docker.registry.name>localhost:5000/</docker.registry.name><!-- leave 
 			empty for docker hub; use e.g. "localhost:5000/" for a local docker registry -->
-		<docker.repository.name>${docker.registry.name}tecnalia/eu.operando.pdr.rpm.server</docker.repository.name>
+		<docker.repository.name>${docker.registry.name}tecnalia/eu.operando.pdr.dan.server</docker.repository.name>
 		<docker.logdb.port>8111</docker.logdb.port>
 		<user.warName>operando#pdr#dan</user.warName>
 		<as.baseurl>http://localhost:8080</as.baseurl>
