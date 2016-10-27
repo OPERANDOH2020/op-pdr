@@ -4,15 +4,11 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 	<modelVersion>4.0.0</modelVersion>
-
-	<parent>
-		<groupId>eu.operando</groupId>
-		<artifactId>op-pdr-rpm-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
-
-	<artifactId>op-pdr-rpm</artifactId>
+	<groupId>eu.operando</groupId>
+	<artifactId>eu.operando.pdr.rpm.server</artifactId>
 	<packaging>war</packaging>
+	<name>eu.operando.core.ldb.server</name>
+	<version>1.0.0</version>
 
 	<properties>
 		<javax.version>2.0.5</javax.version>
