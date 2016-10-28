@@ -17,12 +17,7 @@
 #- { name: AMI, schema: https, host: snf-706921.vm.okeanos.grnet.gr, port: 8443, serviceRoot: /dan }
 repositoryManagers:
 - name: built-in
-  schema: https
-  host: snf-706921.vm.okeanos.grnet.gr
-  port: 8443
-  serviceRoot: /op-pdr-rpm/
-- name: AMI
-  schema: https
-  host: snf-706921.vm.okeanos.grnet.gr
-  port: 8443
-  serviceRoot: /op-pdr-rpm/
+  schema: http
+  host: server02tecnalia.westeurope.cloudapp.azure.com
+  port: 8112
+  serviceRoot: /operando/pdr/rpm
