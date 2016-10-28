@@ -27,7 +27,7 @@ public class RepositoryManagerCache {
 		Yaml yaml = new Yaml(constructor);		
 		
 		try{
-			RepositoryManagers rms= (RepositoryManagers)yaml.load(new ClassPathResource("application.yml").getInputStream());
+			RepositoryManagers rms= (RepositoryManagers)yaml.load(new ClassPathResource("repository-managers.yml").getInputStream());
 			for (RepositoryManager rm: rms.getRepositoryManagers()) {
 				cacheMap.put(rm.getName(), rm);
 			}			
