@@ -1,0 +1,117 @@
+<!-- 
+/*******************************************************************************
+ *  # Copyright (c) 2016 {UPRC}.
+ *  # All rights reserved. This program and the accompanying materials
+ *  # are made available under the terms of the The MIT License (MIT).
+ *  # which accompanies this distribution, and is available at
+ *  # http://opensource.org/licenses/MIT
+ *
+ *  # Contributors:
+ *  #    {Constantinos Patsakis} {UPRC}
+ *  #    {Stamatis Glykos} {UPRC}
+ *  #    {Constantinos Alexandris} {UPRC}
+ *  # Initially developed in the context of OPERANDO EU project www.operando.eu 
+ *******************************************************************************/
+ -->
+ 
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>eu.operando</groupId>
+		<artifactId>eu.operando.pdr.dan</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<artifactId>eu.operando.pdr.dan.server</artifactId>
+	<packaging>war</packaging>
+	<name>Operando's Data Access Node</name>
+
+	<properties>
+		<springframework.version>4.3.0.RELEASE</springframework.version>
+	</properties>
+
+	<dependencies>
+		<!-- Spring Framework -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+
+		<!-- JSON serializer/deserializer <dependency> <groupId>com.fasterxml.jackson.core</groupId> 
+			<artifactId>jackson-databind</artifactId> <version>${jackson-version}</version> 
+			</dependency> -->
+
+		<!-- Http Client -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.17</version>
+		</dependency>
+
+		<!-- Operando modules -->
+		<dependency>
+			<groupId>eu.operando</groupId>
+			<artifactId>eu.operando.core.ldb.client</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>eu.operando</groupId>
+			<artifactId>eu.operando.interfaces.aapi.client</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		
+		<dependency>
+		   <groupId>log4j</groupId>
+		   <artifactId>log4j</artifactId>
+		   <version>1.2.17</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.4</version>
+					<configuration>
+						<warSourceDirectory>src/main/webapp</warSourceDirectory>
+						<warName>op-pdr-dan</warName>
+						<failOnMissingWebXml>false</failOnMissingWebXml>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<finalName>op-pdr-dan</finalName>
+	</build>
+</project>

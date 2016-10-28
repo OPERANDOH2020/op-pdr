@@ -5,9 +5,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>eu.operando</groupId>
-	<artifactId>op-pdr-dan-parent</artifactId>
+	<artifactId>eu.operando.pdr.dan</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,9 +16,7 @@
 	</properties>
 
 	<modules>
-		<module>op-pdr-dan</module>
-		<module>op-interfaces-aapi-ws</module>
-		<module>core-logdb-ws</module>
+		<module>eu.operando.pdr.dan.server</module>		
 	</modules>
 
 	<build>
