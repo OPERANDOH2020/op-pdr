@@ -12,13 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import eu.operando.pdr.dan.constants.CustomHttpHeaders;
+import eu.operando.pdr.dan.utils.Helper;
 import io.swagger.client.ApiException;
 import io.swagger.client.api.DefaultApi;
 
 public class AuthenticationFilter implements Filter{
 	
 	private static final String SERVICE_ID="op-pdr/dan";
-	private static final String BASE_URL="http://snf-706921.vm.okeanos.grnet.gr:8080/authentication";
+	private static final String BASE_URL=Helper.DAN_PROPS.getProperty("aapi.url");
 	
 	private DefaultApi aapi = new DefaultApi();
 

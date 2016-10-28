@@ -15,7 +15,7 @@ import io.swagger.client.model.LogRequest;
  * @author alexandris
  */
 public class RemoteLog implements Runnable{
-    private static final String LOG_ENDPOINT = "http://server02tecnalia.westeurope.cloudapp.azure.com:8090";
+    private static final String LOG_ENDPOINT = Helper.DAN_PROPS.getProperty("logdb.url");
     
     String logTitle;
     String logDescription;
