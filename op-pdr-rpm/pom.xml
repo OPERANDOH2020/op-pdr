@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>eu.operando</groupId>
-	<artifactId>op-pdr-rpm-parent</artifactId>
+	<artifactId>eu.operando.pdr.rpm</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 
 	<name>Built-in repository manager</name>
 	<description>A repository manager that publishes, as oData service, the content of Operando's built-in, Epsos compliant, database</description>
@@ -18,11 +18,7 @@
 	</properties>
 
 	<modules>
-		<module>op-pdr-rpm</module>
-		<!-- 
-		<module>op-interfaces-aapi-ws</module>
-		<module>core-logdb-ws</module>
-		 -->
+		<module>eu.operando.pdr.rpm.server</module>		
 	</modules>
 
 	<build>

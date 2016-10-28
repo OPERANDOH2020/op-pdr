@@ -7,11 +7,11 @@
 
 	<parent>
 		<groupId>eu.operando</groupId>
-		<artifactId>op-pdr-rpm-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<artifactId>eu.operando.pdr.rpm</artifactId>
+		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>op-pdr-rpm</artifactId>
+	<artifactId>eu.operando.pdr.rpm.server</artifactId>
 	<packaging>war</packaging>
 
 	<properties>
@@ -116,14 +116,14 @@
 		<!-- Operando modules -->
 		<dependency>
 			<groupId>eu.operando</groupId>
-			<artifactId>core-logdb-ws</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<artifactId>eu.operando.core.ldb.client</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>eu.operando</groupId>
-			<artifactId>op-interfaces-aapi-ws</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<artifactId>eu.operando.interfaces.aapi.client</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
 
