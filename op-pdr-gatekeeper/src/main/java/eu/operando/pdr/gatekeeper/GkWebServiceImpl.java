@@ -50,46 +50,56 @@ public class GkWebServiceImpl implements GkWebService
 	public Response processRequest(String pathPlus, String httpMethod, HttpHeaders headersFromCaller, String body)
 	{
 		Response response = null;
-		
-		String serviceTicket = headersFromCaller.getHeaderString(HEADER_NAME_SERVICE_TICKET);
 		Status status = null;
 		String errorMessage = "";
 		
 		boolean error = false;
-		try
-		{
-			AuthenticationWrapper authenticationWrapper = clientAuthenticationApi.requestAuthenticationDetails(serviceTicket, SERVICE_ID_GATEKEEPER);
-			boolean validTicket = authenticationWrapper.isTicketValid();
-			if (validTicket)
-			{
-				String idOspUser = authenticationWrapper.getIdOspUser();
-				MultivaluedMap<String, String> headersToDan = filterHeaders(headersFromCaller);
-				try
-				{
-					response = clientDataAccessNode.sendRequest(idOspUser, pathPlus, httpMethod, headersToDan, body);
-				}
-				catch (OperandoAuthenticationException e)
-				{
-					error = true;
-					status = Status.INTERNAL_SERVER_ERROR;
-					LOGGER.error("Error with authentication procedure", e);
-				}
-			}
-			else
-			{
-				error = true;
-				status = Status.FORBIDDEN;
-				errorMessage = ERROR_MESSAGE_INVALID_SERVICE_TICKET;
-			}
-		}
-		catch (OperandoCommunicationException e)
+		
+		String serviceTicket = headersFromCaller.getHeaderString(HEADER_NAME_SERVICE_TICKET);
+		if (serviceTicket == null)
 		{
 			error = true;
-			status = Status.INTERNAL_SERVER_ERROR;
-			LOGGER.error("Error communicating with another module", e);
-			errorMessage = "Internal Server Error";
+			status = Status.BAD_REQUEST;
+			errorMessage = "A service ticket must be provided using the service-ticket header.";
 		}
-
+		
+		if (!error)
+		{
+			try
+			{
+				AuthenticationWrapper authenticationWrapper = clientAuthenticationApi.requestAuthenticationDetails(serviceTicket, SERVICE_ID_GATEKEEPER);
+				boolean validTicket = authenticationWrapper.isTicketValid();
+				if (validTicket)
+				{
+					String idOspUser = authenticationWrapper.getIdOspUser();
+					MultivaluedMap<String, String> headersToDan = filterHeaders(headersFromCaller);
+					try
+					{
+						response = clientDataAccessNode.sendRequest(idOspUser, pathPlus, httpMethod, headersToDan, body);
+					}
+					catch (OperandoAuthenticationException e)
+					{
+						error = true;
+						status = Status.INTERNAL_SERVER_ERROR;
+						LOGGER.error("Error with authentication procedure", e);
+					}
+				}
+				else
+				{
+					error = true;
+					status = Status.FORBIDDEN;
+					errorMessage = ERROR_MESSAGE_INVALID_SERVICE_TICKET;
+				}
+			}
+			catch (OperandoCommunicationException e)
+			{
+				error = true;
+				status = Status.INTERNAL_SERVER_ERROR;
+				LOGGER.error("Error communicating with another module", e);
+				errorMessage = "Internal Server Error";
+			}
+		}
+		
 		if (error)
 		{
 			response = Response.status(status).entity(errorMessage).build();
