@@ -87,6 +87,7 @@ public class GkWebServiceImpl implements GkWebService
 			error = true;
 			status = Status.INTERNAL_SERVER_ERROR;
 			LOGGER.error("Error communicating with another module", e);
+			errorMessage = "Internal Server Error";
 		}
 
 		if (error)
