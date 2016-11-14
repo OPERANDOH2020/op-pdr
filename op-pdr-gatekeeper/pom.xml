@@ -102,12 +102,12 @@
 		<docker.repository.name>${docker.registry.name}tecnalia/eu.operando.pdr.gk.server</docker.repository.name>
 		<docker.logdb.port>8110</docker.logdb.port>
 		<user.warName>operando#pdr#gk</user.warName>
-		<as.baseurl>http://localhost:8080</as.baseurl>
+		<aapi.baseurl>http://localhost:8080</aapi.baseurl>
 		<dan.baseurl>http://localhost:8080</dan.baseurl>
 		<ldb.baseurl>http://localhost:8080</ldb.baseurl>
  	    <rm.baseurl>http://localhost:8080</rm.baseurl>
-		<as.gkusername>operando</as.gkusername>
-		<as.gkpassword>1234</as.gkpassword>
+		<aapi.gkusername>operando</aapi.gkusername>
+		<aapi.gkpassword>1234</aapi.gkpassword>
 		<packaging.type>jar</packaging.type>
 		<!-- end of addition -->
 	</properties>
@@ -121,12 +121,12 @@
 				</property>
 			</activation>
 			<properties>
-				<as.baseurl>http://integration.operando.dmz.lab.esilab.org:8101/operando/core/as</as.baseurl>
+				<aapi.baseurl>http://integration.operando.esilab.org:8135/operando/interfaces/aapi</aapi.baseurl>
 				<dan.baseurl>http://integration.operando.dmz.lab.esilab.org:8111/operando/pdr/dan</dan.baseurl>
 				<ldb.baseurl>http://integration.operando.dmz.lab.esilab.org:8090/operando/core/ldb</ldb.baseurl>
 	 	        <rm.baseurl>http://integration.operando.dmz.lab.esilab.org:8102/operando/core/rm</rm.baseurl>
-				<as.gkusername>operando</as.gkusername>
-				<as.gkpassword>1234</as.gkpassword>
+				<aapi.gkusername>operando</aapi.gkusername>
+				<aapi.gkpassword>1234</aapi.gkpassword>
 			</properties>
 		</profile>
 	</profiles>
