@@ -13,10 +13,10 @@
 #*******************************************************************************/
 
 #repositoryManagers:
-#- { name: built-in, schema: https, host: snf-706921.vm.okeanos.grnet.gr, port: 8443, serviceRoot: /dan }
-#- { name: AMI, schema: https, host: snf-706921.vm.okeanos.grnet.gr, port: 8443, serviceRoot: /dan }
+#- { name: built-in, serviceId: op-pdr/rpm/built-in, schema: https, host: snf-706921.vm.okeanos.grnet.gr, port: 8443, serviceRoot: /op-pdr-rpm }
 repositoryManagers:
 - name: built-in
+  serviceId: op-pdr/rpm/built-in
   schema: http
   host: server02tecnalia.westeurope.cloudapp.azure.com
   port: 8112

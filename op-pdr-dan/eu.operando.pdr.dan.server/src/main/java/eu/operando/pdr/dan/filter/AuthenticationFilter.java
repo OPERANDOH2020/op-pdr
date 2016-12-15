@@ -11,37 +11,37 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import eu.operando.pdr.dan.constants.CustomHttpHeaders;
-import eu.operando.pdr.dan.utils.Helper;
-import io.swagger.client.ApiException;
-import io.swagger.client.api.DefaultApi;
+import eu.operando.pdr.dan.service.AuthenticationService;
 
 public class AuthenticationFilter implements Filter{
-	
+
 	private static final String SERVICE_ID="op-pdr/dan";
-	private static final String BASE_URL=Helper.DAN_PROPS.getProperty("aapi.url");
-	
-	private DefaultApi aapi = new DefaultApi();
+
+	private AuthenticationService authenticationService;
 
 	@Override
 	public void destroy() {}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		String st = ((HttpServletRequest)request).getHeader(CustomHttpHeaders.SERVICE_TICKET.toString());
-		try{
-			aapi.aapiTicketsStValidateGet(st, SERVICE_ID);	
-		}catch(ApiException apiex){			
+		String serviceTicket = ((HttpServletRequest)request).getHeader(CustomHttpHeaders.SERVICE_TICKET.toString());
+
+		if (!authenticationService.isServiceTicketValid(serviceTicket, SERVICE_ID)){
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			return;
-		}		
+		}
 		
 		chain.doFilter(request, response);
 	}
 
 	@Override
-	public void init(FilterConfig arg0) throws ServletException {
-		aapi.getApiClient().setBasePath(BASE_URL);
+	public void init(FilterConfig cfg) { 
+		ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(cfg.getServletContext());
+		this.authenticationService = ctx.getBean(AuthenticationService.class);
 	}
 
 }

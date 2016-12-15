@@ -22,16 +22,16 @@ import eu.operando.pdr.dan.filter.AuthenticationFilter;
 import eu.operando.pdr.dan.filter.HeadersCheckerFilter;
 import eu.operando.pdr.dan.filter.ResponsibleCheckerFilter;
 
-public class Initializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class DanWebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 	 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[] { BaseConfiguration.class, HttpClientConfiguration.class };
+        return new Class[] { DanAppConfig.class, HttpClientConfiguration.class };
     }
   
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return null;
+        return new Class[] { DanWebConfig.class };
     }
   
     @Override

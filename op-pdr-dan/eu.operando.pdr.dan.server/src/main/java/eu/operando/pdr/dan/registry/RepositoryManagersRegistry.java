@@ -1,4 +1,4 @@
-package eu.operando.pdr.dan.cache;
+package eu.operando.pdr.dan.registry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +12,9 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 @Component
-public class RepositoryManagerCache {
+public class RepositoryManagersRegistry {
 				
-	private final Map<String, RepositoryManager> cacheMap = new HashMap<String, RepositoryManager>();
+	private final Map<String, RepositoryManager> map = new HashMap<String, RepositoryManager>();
 	
 	@PostConstruct
 	public void setup() {
@@ -27,25 +27,16 @@ public class RepositoryManagerCache {
 		Yaml yaml = new Yaml(constructor);		
 		
 		try{
-			RepositoryManagers rms= (RepositoryManagers)yaml.load(new ClassPathResource("repository-managers.yml").getInputStream());
+			RepositoryManagers rms= (RepositoryManagers)yaml.load(new ClassPathResource("repositoryManagersRegistry.yml").getInputStream());
 			for (RepositoryManager rm: rms.getRepositoryManagers()) {
-				cacheMap.put(rm.getName(), rm);
+				map.put(rm.getName(), rm);
 			}			
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
 	}
 	
-	public void put(String key, RepositoryManager value) {
-		synchronized (cacheMap) {
-			cacheMap.put(key, value);
-		}
-	}
-
-	public RepositoryManager get(String key) {
-		synchronized (cacheMap) {
-			RepositoryManager value = (RepositoryManager) cacheMap.get(key);
-			return value; 
-		}
+	public RepositoryManager get(String key) {	
+			return map.get(key);
 	}
 }

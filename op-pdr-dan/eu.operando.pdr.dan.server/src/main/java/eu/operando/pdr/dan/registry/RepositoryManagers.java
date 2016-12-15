@@ -1,4 +1,4 @@
-package eu.operando.pdr.dan.cache;
+package eu.operando.pdr.dan.registry;
 
 import java.util.List;
 

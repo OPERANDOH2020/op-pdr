@@ -1,7 +1,9 @@
-package eu.operando.pdr.dan.cache;
+package eu.operando.pdr.dan.registry;
 
 public class RepositoryManager {
 	String name;
+	
+	String serviceId;
 	
 	String schema;
 	
@@ -16,6 +18,13 @@ public class RepositoryManager {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+			
+	public String getServiceId() {
+		return serviceId;
+	}
+	public void setServiceId(String serviceId) {
+		this.serviceId = serviceId;
 	}
 	public String getSchema() {
 		return schema;
