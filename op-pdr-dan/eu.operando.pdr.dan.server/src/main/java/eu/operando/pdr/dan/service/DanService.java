@@ -267,7 +267,7 @@ public class DanService implements DanServiceIF {
 	private RepositoryManager getRepositoryManager(String name) throws RepositoryManagerRegistryException {		
 		RepositoryManager rm = repositoryManagersRegistry.get(name);
 		if (rm == null){			
-			remoteLogger.log(LogRequest.LogDataTypeEnum.WARN, "", "The requested OSP [" + name + "] not found.", LogRequest.LogPriorityEnum.NORMAL.toString());
+			remoteLogger.log(LogRequest.LogDataTypeEnum.WARN, "", "The requested OSP [" + name + "] not found.", LogRequest.LogPriorityEnum.NORMAL);
 			throw new RepositoryManagerRegistryException(HttpServletResponse.SC_NOT_FOUND, "The requested OSP [" + name + "] not found.");
 		}
 

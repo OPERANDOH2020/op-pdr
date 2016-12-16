@@ -10,7 +10,7 @@ import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;
 import io.swagger.client.api.LogApi;
 import io.swagger.client.model.LogRequest;
-import io.swagger.client.model.LogRequest.LogDataTypeEnum;
+import io.swagger.client.model.LogRequest.*;
 
 @Service
 public class LogDBService implements LogDBServiceIF{
@@ -36,9 +36,9 @@ public class LogDBService implements LogDBServiceIF{
 	}	
 	
 	@Override
-	public void log(LogDataTypeEnum logLevel, String logTitle, String logDescription, String logPriority) {		
+	public void log(LogDataTypeEnum logLevel, String logTitle, String logDescription, LogPriorityEnum logPriority) {		
 		try {
-			logApi.lodDB(new LogRequest().logPriority(LogRequest.LogPriorityEnum.LOW).description(logDescription).requesterId(REQUESTER_ID).title(logTitle).requesterType(LogRequest.RequesterTypeEnum.MODULE).logDataType(logLevel));			
+			logApi.lodDB(new LogRequest().logPriority(logPriority).description(logDescription).requesterId(REQUESTER_ID).title(logTitle).requesterType(LogRequest.RequesterTypeEnum.MODULE).logDataType(logLevel));			
 		} catch (ApiException ex) {	
 			LOGGER.error(String.format("eu.operando.pdr.dan.service.LogDBService.log('%s', '%s', '%s', '%s', '%s') failed", logLevel.toString(), logTitle, logDescription, logPriority), ex);			
 		}
