@@ -1,10 +1,23 @@
 package eu.operando.pdr.dan.service;
 
-import javax.annotation.PostConstruct;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 
+import javax.annotation.PostConstruct;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
 import eu.operando.pdr.dan.exception.AuthenticationServiceException;
 import io.swagger.client.ApiClient;
@@ -38,8 +51,58 @@ public class AuthenticationService implements AuthenticationServiceIF{
 	
 	@PostConstruct
 	public void setup() {
-		ApiClient apiClient =  new ApiClient().setBasePath(AS_ENDPOINT);        
-		aapi.setApiClient(apiClient);		
+		/* The ClientConfig created below uses a "Trust All"
+		 * SSLConnectionSocketFactory which blindly trusts all certificates.
+		 * This is very insecure and leaves you vulnerable to MitM attacks.
+		 *
+		 * This approach can be useful during development if security
+		 * certificates are not available
+		 */
+		try {
+
+			final TrustManager[] trustAllCerts = new TrustManager[]{
+					new X509TrustManager() {
+						public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+							return null;
+						}
+
+						public void checkClientTrusted(
+								final java.security.cert.X509Certificate[] arg0, final String arg1)
+										throws CertificateException {
+							// do nothing and blindly accept the certificate
+						}
+
+						public void checkServerTrusted(
+								final java.security.cert.X509Certificate[] arg0, final String arg1)
+										throws CertificateException {
+							// do nothing and blindly accept the server
+						}
+					}
+			};
+
+			final SSLContext sslcontext = SSLContext.getInstance("SSL");
+			sslcontext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+
+			final ClientConfig config = new DefaultClientConfig();
+
+			config.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES,
+					new HTTPSProperties(
+							SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER,
+							sslcontext));
+
+			final Client client = Client.create(config);
+			ApiClient apiClient =  new ApiClient().setBasePath(AS_ENDPOINT);
+			apiClient.setHttpClient(client);
+			aapi.setApiClient(apiClient);	
+
+		} catch (KeyManagementException e) {
+			LOGGER.error(e.getMessage());			
+		} catch (NoSuchAlgorithmException e) {
+			LOGGER.error(e.getMessage());
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}		
 	}	
 			
 	@Override
