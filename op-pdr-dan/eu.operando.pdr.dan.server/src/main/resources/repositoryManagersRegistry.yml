@@ -17,7 +17,25 @@
 repositoryManagers:
 - name: built-in
   serviceId: op-pdr/rpm/built-in
-  schema: https
-  host: snf-706921.vm.okeanos.grnet.gr
-  port: 8443
-  serviceRoot: /op-pdr-rpm
+  schema: http
+  host: integration.operando.esilab.org
+  port: 8112
+  serviceRoot: /operando/pdr/rpm
+- name: ASLBG_IL
+  serviceId: op-pdr/rpm/ASLBG_IL
+  schema: http
+  host: www.operando.eu
+  port: 80
+  serviceRoot: /odata
+- name: GASL_CDS
+  serviceId: op-pdr/rpm/GASL_CDS
+  schema: http
+  host: www.operando.eu
+  port: 80
+  serviceRoot: /odata
+- name: ASLBG_GA
+  serviceId: op-pdr/rpm/ASLBG_GA
+  schema: http
+  host: www.operando.eu
+  port: 80
+  serviceRoot: /odata
