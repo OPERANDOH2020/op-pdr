@@ -31,10 +31,10 @@ public class AuthenticationServiceITest {
 			return new PropertySourcesPlaceholderConfigurer();
 		}
 		
-		@Bean
-        public AuthenticationServiceIF getAuthenticationService() {
-			return new AuthenticationService();            
-        }
+//		@Bean
+//        public AuthenticationServiceIF getAuthenticationService() {
+//			return new AuthenticationService();            
+//        }
 	}
 	
 	@Value("${as.url}")

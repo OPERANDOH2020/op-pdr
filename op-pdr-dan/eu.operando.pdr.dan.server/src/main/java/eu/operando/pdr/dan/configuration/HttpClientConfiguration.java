@@ -3,6 +3,7 @@ package eu.operando.pdr.dan.configuration;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.http.HeaderElement;
@@ -25,6 +26,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -59,6 +61,11 @@ public class HttpClientConfiguration {
     private static final int ONE_SECOND_IN_MILLIS = 1000;
     private static final int DEFAULT_KEEP_ALIVE_TIME_MILLIS = 5 * ONE_SECOND_IN_MILLIS;
     private static final int CLOSE_IDLE_CONNECTION_WAIT_TIME_SECS = 30;
+    
+    @Bean
+    public Executor taskExecutor() {
+        return new SimpleAsyncTaskExecutor();
+    }
 
     @Bean
     public PoolingHttpClientConnectionManager getPoolingConnectionManager() {

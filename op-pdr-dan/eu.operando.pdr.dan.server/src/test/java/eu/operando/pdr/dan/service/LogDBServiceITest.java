@@ -29,10 +29,10 @@ public class LogDBServiceITest {
 			return new PropertySourcesPlaceholderConfigurer();
 		}
 		
-		@Bean
-        public LogDBServiceIF getLogDBService() {
-			return new LogDBService();            
-        }
+//		@Bean
+//        public LogDBServiceIF getLogDBService() {
+//			return new LogDBService();            
+//        }
 	}
 	
 	@Value("${logdb.url}")

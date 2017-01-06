@@ -1,7 +1,10 @@
 package eu.operando.pdr.dan.service;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 //import java.io.InputStreamReader;
 import java.util.Enumeration;
 
@@ -11,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -50,7 +54,7 @@ public class DanService implements DanServiceIF {
 		RepositoryManager rm = getRepositoryManager(request.getHeader(CustomHttpHeaders.OSP_IDENTIFIER.toString()));
 
 		String relativePath = request.getRequestURI().substring(request.getContextPath().length());
-		String queryParams = request.getQueryString()!=null ? "?" + request.getQueryString() : "";
+		String queryParams = request.getQueryString()!=null ? "?" + request.getQueryString() : null;
 		String uri = getRepositoryManagerURI(rm, relativePath, queryParams);
 
 		HttpGet httpget=null;
@@ -58,27 +62,16 @@ public class DanService implements DanServiceIF {
 		try{
 			httpget = new HttpGet(uri);
 
-			//add all callers header, except the service-ticket
-			Enumeration<String> headerNames = request.getHeaderNames();
-			while(headerNames.hasMoreElements()) {
-				String name = (String)headerNames.nextElement();
-				if (name.equals(CustomHttpHeaders.SERVICE_TICKET.toString())) //filter out that header. we have to generate a new one 
-					continue;
-
-				Enumeration<String> headerValues = request.getHeaders(name);
-				while(headerValues.hasMoreElements()) {
-					String value = (String)headerValues.nextElement();
-					httpget.addHeader(name, value);					
-				}				
-			}
+			filterCallerHeaders(request, httpget, rm.getHost());
 
 			//add appropriate service-ticket header
 			addServiceTicketHeader(httpget, rm.getServiceId());
-
+			
 			result= httpClient.execute(httpget);
 
 			HttpEntity entity = result.getEntity();
-//			if (LOGGER.isDebugEnabled()) {TODO: Find a way to log without consuming the stream
+//			TODO: Following snippet consumes the stream. Another solution is needed.
+//			if (LOGGER.isDebugEnabled()) {
 //				BufferedReader r = new BufferedReader(new InputStreamReader(entity.getContent()));
 //				StringBuilder total = new StringBuilder();
 //				String line = null;
@@ -97,7 +90,9 @@ public class DanService implements DanServiceIF {
 			throw new DanServiceException(-1, ex.getMessage());
 		} finally{
 			try {
-				result.close();
+				if (result!=null) {
+					result.close();
+				}
 			} catch (IOException ioe) {
 				LOGGER.error(ioe.getMessage());
 			}                        
@@ -117,25 +112,11 @@ public class DanService implements DanServiceIF {
 		try{
 			httppost = new HttpPost(uri);
 
-			//add all callers header, except the service-ticket
-			Enumeration<String> headerNames = request.getHeaderNames();
-			while(headerNames.hasMoreElements()) {
-				String name = (String)headerNames.nextElement();
-				if ("content-length".equals(name)){ //For some reason it should not be in the HttpPost object
-					continue;
-				} else if (CustomHttpHeaders.SERVICE_TICKET.toString().equals(name)) //filter out that header. we have to generate a new one 
-					continue;
-
-				Enumeration<String> headerValues = request.getHeaders(name);
-				while(headerValues.hasMoreElements()) {					
-					String value = (String)headerValues.nextElement();
-					httppost.addHeader(name, value);
-				}				
-			}
+			filterCallerHeaders(request, httppost, rm.getHost());
 
 			//add appropriate service-ticket header
 			addServiceTicketHeader(httppost, rm.getServiceId());
-
+						
 			//add caller body
 			BufferedReader reader = request.getReader();
 			StringBuffer json = new StringBuffer();
@@ -145,8 +126,8 @@ public class DanService implements DanServiceIF {
 			}
 			
 			StringEntity params = new StringEntity(json.toString());
-			params.setContentType("application/json; charset=UTF-8");
-			httppost.addHeader("content-type", "application/json;odata=verbose");
+//			params.setContentType("application/json; charset=UTF-8");
+//			httppost.addHeader("content-type", "application/json;odata=verbose");
 			httppost.setEntity(params);
 
 			result= httpClient.execute(httppost);
@@ -171,7 +152,9 @@ public class DanService implements DanServiceIF {
 			throw new DanServiceException(-1, ex.getMessage());
 		} finally{
 			try {
-				result.close();
+				if (result!=null) {
+					result.close();
+				}
 			} catch (IOException ioe) {
 				LOGGER.error(ioe.getMessage());
 			}                        
@@ -191,21 +174,7 @@ public class DanService implements DanServiceIF {
 		try{
 			httpput = new HttpPut(uri);
 
-			//add all callers header, except the service-ticket
-			Enumeration<String> headerNames = request.getHeaderNames();
-			while(headerNames.hasMoreElements()) {
-				String name = (String)headerNames.nextElement();
-				if ("content-length".equals(name)){ //For some reason it should not be in the HttpPost object
-					continue;
-				} else if (CustomHttpHeaders.SERVICE_TICKET.toString().equals(name)) //filter out that header. we have to generate a new one 
-					continue;
-
-				Enumeration<String> headerValues = request.getHeaders(name);
-				while(headerValues.hasMoreElements()) {					
-					String value = (String)headerValues.nextElement();
-					httpput.addHeader(name, value);
-				}				
-			}
+			filterCallerHeaders(request, httpput, rm.getHost());
 
 			//add appropriate service-ticket header
 			addServiceTicketHeader(httpput, rm.getServiceId());
@@ -219,8 +188,8 @@ public class DanService implements DanServiceIF {
 			}
 			
 			StringEntity params = new StringEntity(json.toString());
-			params.setContentType("application/json; charset=UTF-8");
-			httpput.addHeader("content-type", "application/json;odata=verbose");
+//			params.setContentType("application/json; charset=UTF-8");
+//			httpput.addHeader("content-type", "application/json;odata=verbose");
 			httpput.setEntity(params);
 
 			result= httpClient.execute(httpput);
@@ -245,7 +214,9 @@ public class DanService implements DanServiceIF {
 			throw new DanServiceException(-1, ex.getMessage());
 		} finally{
 			try {
-				result.close();
+				if (result!=null) {
+					result.close();
+				}
 			} catch (IOException ioe) {
 				LOGGER.error(ioe.getMessage());
 			}                        
@@ -288,5 +259,38 @@ public class DanService implements DanServiceIF {
 		String serviceTicket = authenticationService.issueServiceTicket(serviceId);
 
 		request.addHeader(CustomHttpHeaders.SERVICE_TICKET.toString(), serviceTicket);
+	}
+	
+	private void filterCallerHeaders(HttpServletRequest callerRequest, HttpRequestBase request, String resourceHost) throws AuthenticationServiceException {
+		boolean contentTypeExists = false;
+		
+		Enumeration<String> headerNames = callerRequest.getHeaderNames();
+		while(headerNames.hasMoreElements()) {
+			String name = (String)headerNames.nextElement();
+			if ("host".equalsIgnoreCase(name)) {//Below it will be replaced by the resource being requested (https://tools.ietf.org/html/rfc2616#section-14.23)
+				continue;				
+			} else if ("content-length".equalsIgnoreCase(name)) { //This is added by the HttpClient based on the body of the HttpPost/HttpPut
+				continue;
+			} else if ("content-type".equalsIgnoreCase(name)) { ////Below it will be setup to 'application/json'. This is only supported by DAN
+				continue;
+			} else if (CustomHttpHeaders.SERVICE_TICKET.toString().equalsIgnoreCase(name)) { //filter out that header. we have to generate a new one 
+				continue;
+			}
+
+
+			Enumeration<String> headerValues = callerRequest.getHeaders(name);
+			while(headerValues.hasMoreElements()) {
+				String value = (String)headerValues.nextElement();
+				request.addHeader(name, value);					
+			}				
+		}
+
+		//add HOST header set to the resource being requested (https://tools.ietf.org/html/rfc2616#section-14.23))
+		request.addHeader("host", resourceHost);
+		
+		if ((request instanceof HttpPost) || (request instanceof HttpPut) || (request instanceof HttpPatch)) {
+			request.addHeader("content-type", "application/json");				
+		}
+
 	}
 }
