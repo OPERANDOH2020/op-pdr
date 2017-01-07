@@ -46,7 +46,7 @@ public class DanController {
 			service.doGet(request, response);
 		} catch(RepositoryManagerRegistryException | AuthenticationServiceException | DanServiceException e){
 			try {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 				return;
 			}catch(IOException ioe){
 				LOGGER.error(ioe.getMessage());
@@ -61,7 +61,7 @@ public class DanController {
 			service.doPost(request, response);
 		} catch(RepositoryManagerRegistryException | AuthenticationServiceException | DanServiceException e){
 			try {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 				return;
 			}catch(IOException ioe){
 				LOGGER.error(ioe.getMessage());
@@ -76,7 +76,7 @@ public class DanController {
 			service.doPut(request, response);
 		} catch(RepositoryManagerRegistryException | AuthenticationServiceException | DanServiceException e){
 			try {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 				return;
 			}catch(IOException ioe){
 				LOGGER.error(ioe.getMessage());

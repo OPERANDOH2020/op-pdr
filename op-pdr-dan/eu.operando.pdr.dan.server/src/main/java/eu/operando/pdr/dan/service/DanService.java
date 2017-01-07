@@ -1,10 +1,7 @@
 package eu.operando.pdr.dan.service;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 //import java.io.InputStreamReader;
 import java.util.Enumeration;
 
