@@ -39,7 +39,7 @@ CREATE TABLE `METADATAFIELDREGISTRY` (
 
 LOCK TABLES `METADATAFIELDREGISTRY` WRITE;
 /*!40000 ALTER TABLE `METADATAFIELDREGISTRY` DISABLE KEYS */;
- VALUES
+INSERT INTO `metadatafieldregistry` (`id`, `element`, `label`, `description`) VALUES
 (0, 'personalInfo.patient.dateOfBirth', 'Patient / Date of Birth\n', 'This field may contain only the year if\r day and month are not available'),
 (1, 'personalInfo.patient.name', 'Patient / Name\n', 'The Name of the patient '),
 (2, 'personalInfo.patient.surname', 'Patient / Surname\n', ''),
