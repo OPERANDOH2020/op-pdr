@@ -39,7 +39,7 @@ CREATE TABLE `METADATAFIELDREGISTRY` (
 
 LOCK TABLES `METADATAFIELDREGISTRY` WRITE;
 /*!40000 ALTER TABLE `METADATAFIELDREGISTRY` DISABLE KEYS */;
-INSERT INTO `metadatafieldregistry` (`id`, `element`, `label`, `description`) VALUES
+INSERT INTO `METADATAFIELDREGISTRY` (`id`, `element`, `label`, `description`) VALUES
 (0, 'personalInfo.patient.dateOfBirth', 'Patient / Date of Birth\n', 'This field may contain only the year if\r day and month are not available'),
 (1, 'personalInfo.patient.name', 'Patient / Name\n', 'The Name of the patient '),
 (2, 'personalInfo.patient.surname', 'Patient / Surname\n', ''),
@@ -118,7 +118,7 @@ CREATE TABLE `METADATAVALUES` (
 
 LOCK TABLES `METADATAVALUES` WRITE;
 /*!40000 ALTER TABLE `METADATAVALUES` DISABLE KEYS */;
-INSERT INTO `metadatavalues` (`id`, `metadatafield_id`, `text_value`, `lang`, `user_id`) VALUES
+INSERT INTO `METADATAVALUES` (`id`, `metadatafield_id`, `text_value`, `lang`, `user_id`) VALUES
 (24, 0, '1954-09-24', '*', 2),
 (25, 1, 'Frank', '*', 2),
 (26, 2, 'Underwood', '*', 2),
@@ -170,7 +170,7 @@ CREATE TABLE `USER` (
 
 LOCK TABLES `USER` WRITE;
 /*!40000 ALTER TABLE `USER` DISABLE KEYS */;
-INSERT INTO `user` (`iduser`, `firstname`, `lastname`) VALUES
+INSERT INTO `USER` (`iduser`, `firstname`, `lastname`) VALUES
 (1, 'Test', 'Tost'),
 (2, 'Frank', 'Underwood'),
 (3, 'kostis', 'alex'),
