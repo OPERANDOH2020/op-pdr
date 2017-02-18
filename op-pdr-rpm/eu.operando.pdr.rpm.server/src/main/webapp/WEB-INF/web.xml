@@ -15,7 +15,7 @@
 		</init-param>
 		<init-param>
 			<param-name>org.apache.olingo.odata2.service.factory</param-name>
-			<param-value>eu.operando.pdr.rpm.service.ServiceFactory</param-value>
+			<param-value>eu.operando.pdr.rpm.service.CustomServiceFactory</param-value>
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
