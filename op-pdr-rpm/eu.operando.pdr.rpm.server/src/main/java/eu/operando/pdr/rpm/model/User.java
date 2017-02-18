@@ -37,6 +37,15 @@ public class User implements Serializable {
 
 	@Column(nullable=false, length=255)
 	private String lastname;
+	
+	@Column(nullable=true)
+	private String salary;
+	
+	@Column(nullable=true, length=255)
+	private String salary_ore;
+	
+	@Column(nullable=true, length=255)
+	private String salary_aes;
 
 	//bi-directional many-to-one association to Metadatavalue
 	@OneToMany(mappedBy="user")
@@ -99,6 +108,30 @@ public class User implements Serializable {
 
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
+	}		
+	
+	public String getSalary() {
+		return salary;
+	}
+
+	public void setSalary(String salary) {
+		this.salary = salary;
+	}
+
+	public String getSalary_ore() {
+		return salary_ore;
+	}
+
+	public void setSalary_ore(String salary_ore) {
+		this.salary_ore = salary_ore;
+	}
+
+	public String getSalary_aes() {
+		return salary_aes;
+	}
+
+	public void setSalary_aes(String salary_aes) {
+		this.salary_aes = salary_aes;
 	}
 
 	public List<Metadatavalue> getMetadatavalues() {

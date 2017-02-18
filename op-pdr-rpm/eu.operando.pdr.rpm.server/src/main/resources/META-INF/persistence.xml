@@ -8,10 +8,10 @@
 		<class>eu.operando.pdr.rpm.model.User</class>
                 		
 		<properties>
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://mysql.integration.operando.dmz.lab.esilab.org:3306/operando_dan?serverTimezone=UTC" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://snf-706921.vm.okeanos.grnet.gr:3306/dan?serverTimezone=UTC" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.user" value="root" />
-			<property name="javax.persistence.jdbc.password" value="root" />
+			<property name="javax.persistence.jdbc.password" value="fuckmepicats00" />
 		</properties>
 	</persistence-unit>
 </persistence>
