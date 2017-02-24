@@ -1,7 +1,10 @@
 package eu.operando.pdr.rpm.service;
 
+import eu.operando.pdr.rpm.model.User;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
 import org.apache.olingo.odata2.api.uri.info.GetEntitySetUriInfo;
@@ -22,59 +25,77 @@ public class CustomODataJPAProcessor extends ODataJPAProcessor{
 		preProcess();
 
 		List<Object> jpaEntities = jpaProcessor.process(uriParserResultView);
-				
+                
+                List<Object> jpaSortedEntities = new ArrayList<>();
+                
+                
+                
 		/* Post Process Step */
-		postProcess(jpaEntities);
+                //if sortby Salary_ore desc
+                ODataResponse oDataResponse = null;
+                
+                if(uriParserResultView.getStartEntitySet().getName().equals("Users") && uriParserResultView.getOrderBy()!=null && uriParserResultView.getOrderBy().getExpressionString().equals("Salary desc") ){
+                    jpaSortedEntities = postProcess(jpaEntities);
+                    
+                    oDataResponse = responseBuilder.build(uriParserResultView, jpaSortedEntities, contentType);
+                }else{
+                     oDataResponse = responseBuilder.build(uriParserResultView, jpaEntities, contentType);
+                }
 
-		ODataResponse oDataResponse =
-				responseBuilder.build(uriParserResultView, jpaEntities, contentType);
-
-		return oDataResponse;
+                
+                return oDataResponse;
 	}
 
 	private void preProcess() {
 
 	}
 
-	private void postProcess(List<Object> names){
-
+	private List<Object> postProcess(List<Object> items){
+            String[] values = new String[items.size()]; 
+            List<Object> jpaSortedEntities = new ArrayList<>();
+            
+            for(int i=0; i<items.size();i++){
+                User currentUser = (User) items.get(i);
+                values[i] = currentUser.getSalary_ore();
+            }
+            
+            String[] sortedValues = bubbleSort(values);
+            
+            for(int j=0; j<sortedValues.length;j++){
+                for(int i=0; i<items.size();i++){
+                    User currentUser = (User) items.get(i);
+                    if(currentUser.getSalary_ore().equals(values[j])){
+                        jpaSortedEntities.add(currentUser);
+                        break;
+                    }
+                }
+            }
+            return jpaSortedEntities;
 	}
 	
-	void quickSort(String[] names, int lowerIndex, int higherIndex) {
-        int i = lowerIndex;
-        int j = higherIndex;
-        String pivot = names[lowerIndex + (higherIndex - lowerIndex) / 2];
+        
+        private String[] bubbleSort(String[] values)
+        {
+             int j;
+             boolean flag = true;   // set flag to true to begin first pass
+             String temp;   //holding variable
 
-        while (i <= j) {
-            while (ore_compare(names[i].toCharArray(), pivot.toCharArray()) < 0) {
-                i++;
-            }
-
-            while (ore_compare(names[j].toCharArray(), pivot.toCharArray()) > 0) {
-                j--;
-            }
-
-            if (i <= j) {
-                exchangeNames(names, i, j);
-                i++;
-                j--;
-            }
-        }
-        //call quickSort recursively
-        if (lowerIndex < j) {
-            quickSort(names, lowerIndex, j);
-        }
-        if (i < higherIndex) {
-            quickSort(names, i, higherIndex);
-        }
-    }
-
-    void exchangeNames(String[] names, int i, int j) {
-        String temp = names[i];
-        names[i] = names[j];
-        names[j] = temp;
-    }
-    
+             while ( flag )
+             {
+                    flag= false;    //set flag to false awaiting a possible swap
+                    for( j=0;  j < values.length -1;  j++ )
+                    {
+                           if(ore_compare(values[j].toCharArray(), values[j+1].toCharArray())==-1){
+                               temp = values[ j ];                //swap elements
+                               values[ j ] = values[ j+1 ];
+                               values[ j+1 ] = temp;
+                               flag = true;              //shows a swap occurred  
+                           }
+                    }
+              }
+             return values;
+        } 
+        
     int ore_compare(char [] u, char [] v) {
     	if (u == v)
     		return 0;
