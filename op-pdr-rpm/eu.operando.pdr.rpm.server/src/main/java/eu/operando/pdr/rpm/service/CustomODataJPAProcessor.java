@@ -1,6 +1,8 @@
 package eu.operando.pdr.rpm.service;
 
 import eu.operando.pdr.rpm.model.User;
+import eu.operando.pdr.rpm.model.UserDto;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +38,23 @@ public class CustomODataJPAProcessor extends ODataJPAProcessor{
                 
                 if(uriParserResultView.getStartEntitySet().getName().equals("Users") && uriParserResultView.getOrderBy()!=null && uriParserResultView.getOrderBy().getExpressionString().equals("Salary desc") ){
                     jpaSortedEntities = postProcess(jpaEntities);
+                
+                    List<Object> jpaSortedEntities2 = new ArrayList<Object>();
+                    for (int i=0; i< jpaSortedEntities.size(); i++){
+                    	try{
+                    		User currentUser = (User)jpaSortedEntities.get(i);
+                    		
+                    		UserDto xxx = new UserDto();
+                        	xxx.setIduser(currentUser.getIduser());
+                        	xxx.setFirstname(currentUser.getFirstname());
+                        	xxx.setLastname(currentUser.getLastname());
+                        	xxx.setMetadatavalues(currentUser.getMetadatavalues());
+                        	xxx.setSalary(currentUser.getSalary());
+                        	jpaSortedEntities2.add(xxx);
+                    	} catch(Exception ex){}
+                    }
                     
-                    oDataResponse = responseBuilder.build(uriParserResultView, jpaSortedEntities, contentType);
+                    oDataResponse = responseBuilder.build(uriParserResultView, jpaSortedEntities2, contentType);
                 }else{
                      oDataResponse = responseBuilder.build(uriParserResultView, jpaEntities, contentType);
                 }
@@ -65,7 +82,13 @@ public class CustomODataJPAProcessor extends ODataJPAProcessor{
                 for(int i=0; i<items.size();i++){
                     User currentUser = (User) items.get(i);
                     if(currentUser.getSalary_ore().equals(values[j])){
-                        jpaSortedEntities.add(currentUser);
+                    	UserDto xxx = new UserDto();
+                    	xxx.setIduser(currentUser.getIduser());
+                    	xxx.setFirstname(currentUser.getFirstname());
+                    	xxx.setLastname(currentUser.getLastname());
+                    	xxx.setMetadatavalues(currentUser.getMetadatavalues());
+                    	xxx.setSalary(currentUser.getSalary());
+                        jpaSortedEntities.add(xxx);
                         break;
                     }
                 }
