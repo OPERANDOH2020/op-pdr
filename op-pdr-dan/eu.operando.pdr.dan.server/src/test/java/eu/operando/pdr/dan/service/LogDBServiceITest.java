@@ -48,6 +48,6 @@ public class LogDBServiceITest {
 	
 	@Test
 	public void log() {		
-		service.log(LogRequest.LogDataTypeEnum.WARN, "testing", "testing", LogRequest.LogPriorityEnum.NORMAL);
+		service.log(LogRequest.LogLevelEnum.WARN, "testing", "testing", LogRequest.LogPriorityEnum.NORMAL);
 	}
 }
