@@ -1,2 +1,8 @@
-/target/
-/logs/
+**/bin/
+**/sources/
+**/logs/
+**/target/
+**/generated/
+**/.classpath
+**/.project
+**/.settings/
