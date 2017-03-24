@@ -36,9 +36,9 @@ public class LogDBService implements LogDBServiceIF{
 	}	
 	
 	@Override
-	public void log(LogDataTypeEnum logLevel, String logTitle, String logDescription, LogPriorityEnum logPriority) {		
+	public void log(LogLevelEnum logLevel, String logTitle, String logDescription, LogPriorityEnum logPriority) {		
 		try {
-			logApi.lodDB(new LogRequest().logPriority(logPriority).description(logDescription).requesterId(REQUESTER_ID).title(logTitle).requesterType(LogRequest.RequesterTypeEnum.MODULE).logDataType(logLevel));			
+			logApi.lodDB(new LogRequest().logPriority(logPriority).description(logDescription).requesterId(REQUESTER_ID).title(logTitle).requesterType(LogRequest.RequesterTypeEnum.MODULE).logLevel(logLevel));			
 		} catch (ApiException ex) {	
 			LOGGER.error(String.format("eu.operando.pdr.dan.service.LogDBService.log('%s', '%s', '%s', '%s', '%s') failed", logLevel.toString(), logTitle, logDescription, logPriority), ex);			
 		}
