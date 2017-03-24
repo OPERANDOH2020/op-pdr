@@ -1,2 +1,8 @@
-/op-pdr-dan/eu.operando.pdr.dan.server/dan-tests/source/build/
-/op-pdr-dan/eu.operando.pdr.dan.server/dan-tests/source/nbproject/private/
+**/bin/
+**/sources/
+**/logs/
+**/target/
+**/generated/
+**/.classpath
+**/.project
+**/.settings/
