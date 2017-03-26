@@ -19,8 +19,6 @@ import javax.ws.rs.core.Response;
 @Path("monitor")
 public class GkMonitorWebInterface
 {
-	private GkWebService service = GkWebServiceFactory.create(); 
-
 	@GET
 	public Response processGetRequest(@Context HttpHeaders headers)
 	{
