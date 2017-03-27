@@ -14,28 +14,20 @@
 
 package eu.operando.pdr.dan.controller;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/monitor")
-public class DanController {
+public class DanMonitorController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			response.ok().entity("server ok").build();
-			return;
-		} catch (IOException ioe) {
-			LOGGER.error(ioe.getMessage());
-		}
-
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.setContentType("server ok");
+		return;
 	}
 }
