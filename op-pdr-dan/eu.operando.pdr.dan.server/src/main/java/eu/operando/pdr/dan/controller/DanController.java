@@ -47,7 +47,14 @@ public class DanController {
 		if (path.matches(".*\\/monitor$"))
 		{
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.setContentType("server ok");
+			try {
+				response.getWriter().write("server ok");
+				response.getWriter().flush();
+				response.getWriter().close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return;
 		}
 		//GBE end
