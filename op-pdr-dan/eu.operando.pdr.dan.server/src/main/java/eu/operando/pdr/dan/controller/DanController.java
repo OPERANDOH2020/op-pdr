@@ -44,7 +44,7 @@ public class DanController {
 		//GBE adding monitor capability
 		String path=request.getRequestURI();
 		LOGGER.debug("DanController-Path: " + path);
-		if (path.matches("\\/monitor$"))
+		if (path.matches("monitor$"))
 		{
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.setContentType("server ok");
