@@ -41,6 +41,16 @@ public class DanController {
 
 	@RequestMapping(method=RequestMethod.GET)
 	public void doGet(HttpServletRequest request, HttpServletResponse response){
+		//GBE adding monitor capability
+		String path=request.getPathInfo();
+		System.out.print("Path: " + path);
+		if (path=="/monitor")
+		{
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.setContentType("server ok");
+			return;
+		}
+		//GBE end
 
 		try {
 			service.doGet(request, response);
