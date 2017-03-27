@@ -28,6 +28,16 @@ public class AuthenticationFilter implements Filter{
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		//GBE adding monitor capability
+		String path=((HttpServletRequest)request).getPathInfo();
+		System.out.print("AuthenticationService-Path: " + path);
+		if (path=="/monitor")
+		{
+			chain.doFilter(request, response);
+			return;
+		}
+		//GBE end
+		
 		String serviceTicket = ((HttpServletRequest)request).getHeader(CustomHttpHeaders.SERVICE_TICKET.toString());
 
 		if (!authenticationService.isServiceTicketValid(serviceTicket, SERVICE_ID)){
