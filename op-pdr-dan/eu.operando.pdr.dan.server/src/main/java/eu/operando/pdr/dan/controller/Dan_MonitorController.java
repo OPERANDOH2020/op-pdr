@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/monitor")
-public class DanMonitorController {
+public class Dan_MonitorController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
