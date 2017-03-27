@@ -27,7 +27,7 @@ public class HeadersCheckerFilter implements Filter{
 		//GBE adding monitor capability
 		String path=((HttpServletRequest)request).getRequestURI();
 		LOGGER.debug("HeadersCheckerFilter-Path: " + path);
-		if (path.matches("monitor$"))
+		if (path.matches(".*\\/monitor$"))
 		{
 			chain.doFilter(request, response);
 			return;
