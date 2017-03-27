@@ -33,7 +33,7 @@ public class AuthenticationFilter implements Filter{
 		//GBE adding monitor capability
 		String path=((HttpServletRequest)request).getRequestURI();
 		LOGGER.debug("AuthenticationService-Path: " + path);
-		if (path=="/monitor")
+		if (path=="/operando/pdr/dan/monitor")
 		{
 			chain.doFilter(request, response);
 			return;
