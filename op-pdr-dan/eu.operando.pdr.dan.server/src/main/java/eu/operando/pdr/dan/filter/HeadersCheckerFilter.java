@@ -25,9 +25,8 @@ public class HeadersCheckerFilter implements Filter{
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		//GBE adding monitor capability
-		String path=((HttpServletRequest)request).getPathInfo();
-		System.out.print("HeadersCheckerFilter-Path: " + path);
-		LOGGER.debug("AuthenticationService-Path: " + path);
+		String path=((HttpServletRequest)request).getRequestURI();
+		LOGGER.debug("HeadersCheckerFilter-Path: " + path);
 		if (path=="/monitor")
 		{
 			chain.doFilter(request, response);
