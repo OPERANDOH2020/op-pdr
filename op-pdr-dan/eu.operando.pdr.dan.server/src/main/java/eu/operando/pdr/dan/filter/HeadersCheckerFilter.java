@@ -11,10 +11,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import eu.operando.pdr.dan.constants.CustomHttpHeaders;
 
 public class HeadersCheckerFilter implements Filter{
 	private static final String SC_BAD_REQUEST_DESC = "One or more of the requered headers are missing (service-ticket, osp-identifier,  psp-user-identifier) ";
+	private static final Logger LOGGER = Logger.getLogger( HeadersCheckerFilter.class.getName() ); //GBE
 
 	@Override
 	public void destroy() {}
@@ -24,6 +27,7 @@ public class HeadersCheckerFilter implements Filter{
 		//GBE adding monitor capability
 		String path=((HttpServletRequest)request).getPathInfo();
 		System.out.print("HeadersCheckerFilter-Path: " + path);
+		LOGGER.debug("AuthenticationService-Path: " + path);
 		if (path=="/monitor")
 		{
 			chain.doFilter(request, response);

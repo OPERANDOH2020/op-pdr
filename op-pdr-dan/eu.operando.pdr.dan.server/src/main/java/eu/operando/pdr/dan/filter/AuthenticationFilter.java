@@ -11,6 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -20,6 +21,7 @@ import eu.operando.pdr.dan.service.AuthenticationService;
 public class AuthenticationFilter implements Filter{
 
 	private static final String SERVICE_ID="op-pdr/dan";
+	private static final Logger LOGGER = Logger.getLogger( AuthenticationFilter.class.getName() ); //GBE
 
 	private AuthenticationService authenticationService;
 
@@ -31,6 +33,7 @@ public class AuthenticationFilter implements Filter{
 		//GBE adding monitor capability
 		String path=((HttpServletRequest)request).getPathInfo();
 		System.out.print("AuthenticationService-Path: " + path);
+		LOGGER.debug("AuthenticationService-Path: " + path);
 		if (path=="/monitor")
 		{
 			chain.doFilter(request, response);
