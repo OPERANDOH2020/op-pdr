@@ -21,6 +21,12 @@ repositoryManagers:
   host: integration.operando.esilab.org
   port: 8112
   serviceRoot: /operando/pdr/rpm
+- name: YellowPages
+  serviceId: op-pdr/rpm/built-in
+  schema: http
+  host: integration.operando.esilab.org
+  port: 8112
+  serviceRoot: /operando/pdr/rpm
 - name: ASLBG_IL
   serviceId: op-pdr/rpm/built-in
   schema: http
