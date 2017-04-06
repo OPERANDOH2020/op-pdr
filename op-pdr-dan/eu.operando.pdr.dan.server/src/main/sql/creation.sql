@@ -109,7 +109,7 @@ CREATE TABLE `METADATAVALUES` (
   KEY `metadata_field_fkey_idx` (`metadatafield_id`),
   CONSTRAINT `metadata_field_fkey` FOREIGN KEY (`metadatafield_id`) REFERENCES `METADATAFIELDREGISTRY` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `user_fkey` FOREIGN KEY (`user_id`) REFERENCES `USER` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
