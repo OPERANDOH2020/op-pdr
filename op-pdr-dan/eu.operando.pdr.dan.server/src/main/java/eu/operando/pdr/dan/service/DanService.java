@@ -51,7 +51,7 @@ public class DanService implements DanServiceIF {
 		RepositoryManager rm = getRepositoryManager(request.getHeader(CustomHttpHeaders.OSP_IDENTIFIER.toString()));
 
 		String relativePath = request.getRequestURI().substring(request.getContextPath().length());
-		String queryParams = request.getQueryString()!=null ? "?" + request.getQueryString() : null;
+		String queryParams = request.getQueryString()!=null ? request.getQueryString() : null;
 		String uri = getRepositoryManagerURI(rm, relativePath, queryParams);
 
 		HttpGet httpget=null;
