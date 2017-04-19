@@ -30,6 +30,7 @@ import eu.operando.OperandoAuthenticationException;
 import eu.operando.OperandoCommunicationException;
 import eu.operando.moduleclients.ClientAuthenticationApiOperandoService;
 import eu.operando.moduleclients.ClientDataAccessNode;
+import eu.operando.moduleclients.ClientRightsManagement;
 
 @RunWith(Parameterized.class)
 public class GkWebServiceImplTests
@@ -45,12 +46,12 @@ public class GkWebServiceImplTests
 	private static final String SERVICE_TICKET_CALLER = "ST-1234";
 	private static final String PSP_USER_ID_CALLER = "user";
 	private ClientAuthenticationApiOperandoService mockClientAuthenticationService = Mockito.mock(ClientAuthenticationApiOperandoService.class);
-	private ClientDataAccessNode mockClientDataAccessNode = Mockito.mock(ClientDataAccessNode.class);
+	private ClientRightsManagement mockClientRightsManagement = Mockito.mock(ClientRightsManagement.class);
 	private HttpHeaders mockHeaders = Mockito.mock(HttpHeaders.class);
 	private MultivaluedMap<String, String> stubbedHeadersFromCaller = new MultivaluedStringMap();
 
 	// System under test
-	private GkWebServiceImpl service = new GkWebServiceImpl(mockClientAuthenticationService, mockClientDataAccessNode);
+	private GkWebServiceImpl service = new GkWebServiceImpl(mockClientAuthenticationService, mockClientRightsManagement);
 
 	// Parameters to tests
 	@Parameter(value = 0)
@@ -59,6 +60,8 @@ public class GkWebServiceImplTests
 	public int numOverloadedMethodParameters;
 	@Parameter(value = 2)
 	public String body;
+	@Parameter(value = 3)
+	public MultivaluedMap<String, String> queryParameters;
 
 	/**
 	 * The service should behave similarly for each http method and for each of the overloaded methods.
@@ -68,20 +71,31 @@ public class GkWebServiceImplTests
 	{
 		// Work out parameters
 		String[] httpMethods = new String[] { HttpMethod.POST, HttpMethod.GET, HttpMethod.PUT, HttpMethod.DELETE };
-		Integer[] numsOverloadedMethodParameters = new Integer[] { 3, 4 };
-
+		Integer[] numsOverloadedMethodParameters = new Integer[] { 4, 5 };
+		Boolean[] boolsAddQueryParameters = new Boolean[] {false, true};
+		
 		// Put it all together!
 		ArrayList<Object[]> data = new ArrayList<Object[]>();
 		for (String httpMethod : httpMethods)
 		{
 			for (int numOverloadedMethodParameters : numsOverloadedMethodParameters)
 			{
-				String body = "";
-				if (numOverloadedMethodParameters == 4)
+				for (boolean addQueryParameters : boolsAddQueryParameters)
 				{
-					body = "body";
+					String body = "";
+					if (numOverloadedMethodParameters == 5)
+					{
+						body = "body";
+					}
+					MultivaluedMap<String, String> queryParameters = new MultivaluedStringMap();
+					
+					if (addQueryParameters)
+					{
+						queryParameters.add("key", "value");
+					}					
+					
+					data.add(new Object[] { httpMethod, numOverloadedMethodParameters, body, queryParameters });					
 				}
-				data.add(new Object[] { httpMethod, numOverloadedMethodParameters, body });
 			}
 		}
 
@@ -126,8 +140,8 @@ public class GkWebServiceImplTests
 		exerciseProcessRequest();
 
 		// Verify
-		Mockito.verify(mockClientDataAccessNode, never())
-			.sendRequest(anyString(), anyString(), anyString(), any(MultivaluedMap.class), anyString());
+		Mockito.verify(mockClientRightsManagement, never())
+			.sendRequest(anyString(), any(MultivaluedMap.class), anyString(), anyString(), any(MultivaluedMap.class), anyString());
 	}
 
 	@Test
@@ -156,13 +170,13 @@ public class GkWebServiceImplTests
 		exerciseProcessRequest();
 
 		// Verify
-		MultivaluedMap<String, String> headersExpectedToDan = new MultivaluedStringMap();
-		headersExpectedToDan.putAll(stubbedHeadersFromCaller);
-		headersExpectedToDan.remove(HEADER_NAME_HOST);
-		headersExpectedToDan.remove(HEADER_NAME_SERVICE_TICKET);
+		MultivaluedMap<String, String> headersExpectedToRm = new MultivaluedStringMap();
+		headersExpectedToRm.putAll(stubbedHeadersFromCaller);
+		headersExpectedToRm.remove(HEADER_NAME_HOST);
+		headersExpectedToRm.remove(HEADER_NAME_SERVICE_TICKET);
 
-		Mockito.verify(mockClientDataAccessNode)
-			.sendRequest(PSP_USER_ID_CALLER, PATH_PLUS, httpMethod, headersExpectedToDan, body);
+		Mockito.verify(mockClientRightsManagement)
+			.sendRequest(httpMethod, headersExpectedToRm, PSP_USER_ID_CALLER, PATH_PLUS, queryParameters, body);
 	}
 
 	@Test
@@ -171,28 +185,28 @@ public class GkWebServiceImplTests
 		// Set up
 		when(mockClientAuthenticationService.requestAuthenticationDetails(SERVICE_TICKET_CALLER, SERVICE_ID_GATEKEEPER))
 			.thenReturn(new AuthenticationWrapper(true, PSP_USER_ID_CALLER));
-		Response responseFromDan = Response.ok().build();
-		when(mockClientDataAccessNode.sendRequest(eq(PSP_USER_ID_CALLER), eq(PATH_PLUS), eq(httpMethod), any(MultivaluedMap.class), eq(body)))
-			.thenReturn(responseFromDan);
+		Response responseFromRm = Response.ok().build();
+		when(mockClientRightsManagement.sendRequest(eq(httpMethod), any(MultivaluedMap.class), eq(PSP_USER_ID_CALLER), eq(PATH_PLUS), eq(queryParameters),  eq(body)))
+			.thenReturn(responseFromRm);
 
 		// Exercise
 		Response responseActual = exerciseProcessRequest();
 
 		// Verify
-		assertEquals(responseFromDan, responseActual);
+		assertEquals(responseFromRm, responseActual);
 	}
 
 	private Response exerciseProcessRequest()
 	{
 		Response response = null;
 
-		if (numOverloadedMethodParameters == 3)
+		if (numOverloadedMethodParameters == 4)
 		{
-			response = service.processRequest(PATH_PLUS, httpMethod, mockHeaders);
+			response = service.processRequest(PATH_PLUS, httpMethod, mockHeaders, queryParameters);
 		}
-		else if (numOverloadedMethodParameters == 4)
+		else if (numOverloadedMethodParameters == 5)
 		{
-			response = service.processRequest(PATH_PLUS, httpMethod, mockHeaders, body);
+			response = service.processRequest(PATH_PLUS, httpMethod, mockHeaders, queryParameters, body);
 		}
 
 		return response;

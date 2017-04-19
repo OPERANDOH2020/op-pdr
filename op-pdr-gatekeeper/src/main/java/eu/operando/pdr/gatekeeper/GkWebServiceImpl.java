@@ -13,7 +13,7 @@ import eu.operando.AuthenticationWrapper;
 import eu.operando.OperandoAuthenticationException;
 import eu.operando.OperandoCommunicationException;
 import eu.operando.moduleclients.ClientAuthenticationApiOperandoService;
-import eu.operando.moduleclients.ClientDataAccessNode;
+import eu.operando.moduleclients.ClientRightsManagement;
 
 /**
  * Implements the logic required of the GK.
@@ -34,20 +34,20 @@ public class GkWebServiceImpl implements GkWebService
 	private static final String HEADER_NAME_HOST = "host";
 	
 	private ClientAuthenticationApiOperandoService clientAuthenticationApi = null;
-	private ClientDataAccessNode clientDataAccessNode = null;
+	private ClientRightsManagement clientRightsManagement = null;
 
-	public GkWebServiceImpl(ClientAuthenticationApiOperandoService clientAuthenticationService, ClientDataAccessNode clientDataAccessNode)
+	public GkWebServiceImpl(ClientAuthenticationApiOperandoService clientAuthenticationService, ClientRightsManagement clientRightsManagement)
 	{
 		this.clientAuthenticationApi = clientAuthenticationService;
-		this.clientDataAccessNode = clientDataAccessNode;
+		this.clientRightsManagement = clientRightsManagement;
 	}
 
-	public Response processRequest(String pathPlus, String httpMethod, HttpHeaders headers)
+	public Response processRequest(String pathPlus, String httpMethod, HttpHeaders headers, MultivaluedMap<String, String> queryParameters)
 	{
-		return processRequest(pathPlus, httpMethod, headers, "");
+		return processRequest(pathPlus, httpMethod, headers, queryParameters, "");
 	}
 
-	public Response processRequest(String pathPlus, String httpMethod, HttpHeaders headersFromCaller, String body)
+	public Response processRequest(String pathPlus, String httpMethod, HttpHeaders headersFromCaller, MultivaluedMap<String, String> queryParameters, String body)
 	{
 		Response response = null;
 		Status status = null;
@@ -75,7 +75,7 @@ public class GkWebServiceImpl implements GkWebService
 					MultivaluedMap<String, String> headersToDan = filterHeaders(headersFromCaller);
 					try
 					{
-						response = clientDataAccessNode.sendRequest(idOspUser, pathPlus, httpMethod, headersToDan, body);
+						response = clientRightsManagement.sendRequest(httpMethod, headersToDan, idOspUser, pathPlus, queryParameters, body);
 					}
 					catch (OperandoAuthenticationException e)
 					{

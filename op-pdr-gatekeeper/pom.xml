@@ -106,8 +106,8 @@
 		<dan.baseurl>http://localhost:8080</dan.baseurl>
 		<ldb.baseurl>http://localhost:8080</ldb.baseurl>
  	    <rm.baseurl>http://localhost:8080</rm.baseurl>
-		<aapi.gkusername>operando</aapi.gkusername>
-		<aapi.gkpassword>1234</aapi.gkpassword>
+		<aapi.gkusername>gatekeeper</aapi.gkusername>
+		<aapi.gkpassword>gatekeeper</aapi.gkpassword>
 		<packaging.type>jar</packaging.type>
 		<!-- end of addition -->
 	</properties>
@@ -125,8 +125,8 @@
 				<dan.baseurl>http://integration.operando.dmz.lab.esilab.org:8111/operando/pdr/dan</dan.baseurl>
 				<ldb.baseurl>http://integration.operando.dmz.lab.esilab.org:8090/operando/core/ldb</ldb.baseurl>
 	 	        <rm.baseurl>http://integration.operando.dmz.lab.esilab.org:8102/operando/core/rm</rm.baseurl>
-				<aapi.gkusername>operando</aapi.gkusername>
-				<aapi.gkpassword>1234</aapi.gkpassword>
+				<aapi.gkusername>gatekeeper</aapi.gkusername>
+				<aapi.gkpassword>gatekeeper</aapi.gkpassword>
 			</properties>
 		</profile>
 	</profiles>

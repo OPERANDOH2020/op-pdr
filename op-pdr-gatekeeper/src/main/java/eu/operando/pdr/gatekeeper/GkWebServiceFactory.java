@@ -4,7 +4,7 @@ import eu.operando.CredentialsOperando;
 import eu.operando.Utils;
 import eu.operando.moduleclients.ClientAuthenticationApiOperandoClient;
 import eu.operando.moduleclients.ClientAuthenticationApiOperandoService;
-import eu.operando.moduleclients.ClientDataAccessNode;
+import eu.operando.moduleclients.ClientRightsManagement;
 import eu.operando.moduleclients.RequestBuilderAuthenticationApi;
 import eu.operando.moduleclients.http.HttpRequestBuilderAuthenticationApi;
 
@@ -15,7 +15,7 @@ public class GkWebServiceFactory
 
 	// Property file property names.
 	private static final String PROPERTY_NAME_ORIGIN_AUTHENTICATION_API = "originAuthenticationApi";
-	private static final String PROPERTY_NAME_ORIGIN_DATA_ACCESS_NODE = "originDataAccessNode";
+	private static final String PROPERTY_NAME_ORIGIN_RIGHTS_MANAGEMENT = "originRightsManagement";
 	private static final String PROPERTY_NAME_USERNAME_GK = "usernameGk";
 	private static final String PROPERTY_NAME_PASSWORD_GK = "passwordGk";
 
@@ -27,7 +27,7 @@ public class GkWebServiceFactory
 	public static GkWebService create()
 	{
 		String originAuthenticationApi = Utils.loadPropertyString(PROPERTIES_FILE_GK, PROPERTY_NAME_ORIGIN_AUTHENTICATION_API);
-		String originDataAccessNode = Utils.loadPropertyString(PROPERTIES_FILE_GK, PROPERTY_NAME_ORIGIN_DATA_ACCESS_NODE);
+		String originRightsManagement = Utils.loadPropertyString(PROPERTIES_FILE_GK, PROPERTY_NAME_ORIGIN_RIGHTS_MANAGEMENT);
 		ClientAuthenticationApiOperandoService clientAuthenticationApiOperandoService = new ClientAuthenticationApiOperandoService(originAuthenticationApi);
 
 		String usernameGk = Utils.loadPropertyString(PROPERTIES_FILE_GK, PROPERTY_NAME_USERNAME_GK);
@@ -35,8 +35,8 @@ public class GkWebServiceFactory
 		CredentialsOperando credentials = new CredentialsOperando(usernameGk, passwordGk);
 		RequestBuilderAuthenticationApi requestBuilderAuthenticatoinApi = new HttpRequestBuilderAuthenticationApi(originAuthenticationApi, credentials);
 		ClientAuthenticationApiOperandoClient clientAuthenticationServiceOperandoClient = new ClientAuthenticationApiOperandoClient(requestBuilderAuthenticatoinApi);
-		ClientDataAccessNode clientDataAccessNode = new ClientDataAccessNode(originDataAccessNode, clientAuthenticationServiceOperandoClient);
+		ClientRightsManagement clientRightsManagement = new ClientRightsManagement(originRightsManagement, clientAuthenticationServiceOperandoClient);
 
-		return new GkWebServiceImpl(clientAuthenticationApiOperandoService, clientDataAccessNode);
+		return new GkWebServiceImpl(clientAuthenticationApiOperandoService, clientRightsManagement);
 	}
 }
