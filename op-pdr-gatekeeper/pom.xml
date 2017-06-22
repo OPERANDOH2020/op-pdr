@@ -102,10 +102,10 @@
 		<docker.repository.name>${docker.registry.name}tecnalia/eu.operando.pdr.gk.server</docker.repository.name>
 		<docker.logdb.port>8110</docker.logdb.port>
 		<user.warName>operando#pdr#gk</user.warName>
-		<aapi.baseurl>http://localhost:8080</aapi.baseurl>
-		<dan.baseurl>http://localhost:8080</dan.baseurl>
-		<ldb.baseurl>http://localhost:8080</ldb.baseurl>
- 	    <rm.baseurl>http://localhost:8080</rm.baseurl>
+		<aapi.baseurl>http://integration.operando.esilab.org:8135/operando/interfaces/aapi</aapi.baseurl>
+		<dan.baseurl>http://integration.operando.esilab.org:8111/operando/pdr/dan</dan.baseurl>
+		<ldb.baseurl>http://integration.operando.esilab.org:8090/operando/core/ldb</ldb.baseurl>
+	    <rm.baseurl>http://150.140.90.165:8102</rm.baseurl>
 		<aapi.gkusername>gatekeeper</aapi.gkusername>
 		<aapi.gkpassword>gatekeeper</aapi.gkpassword>
 		<packaging.type>jar</packaging.type>
