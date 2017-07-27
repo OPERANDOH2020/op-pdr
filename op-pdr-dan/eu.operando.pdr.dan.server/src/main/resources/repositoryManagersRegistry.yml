@@ -45,3 +45,9 @@ repositoryManagers:
   host: www.operando.eu
   port: 80
   serviceRoot: /odata
+- name: FoodCoach
+  serviceId: op-pdr/rpm/built-in
+  schema: http
+  host: operando.odata.eservices4life.org
+  port: 80
+  serviceRoot: /foodcoach
