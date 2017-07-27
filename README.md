@@ -1,7 +1,10 @@
-# op-interfaces
-For the modules in the interfaces container
+# op-pdr
+For the modules in the Private Data Repository (PDR) container:
+ * Gatekeeper (GK)
+ * Data Access Node (DAN)
+ * Repository Manager (RPM)
 
-# Dependencies
+## Dependencies
 Dependency Name|Description|Link|Module|Test-only?
 ---------------|-----------|----|------|----------
 Java|A general-purpose computer programming language|https://java.com/en/download/|GK|
