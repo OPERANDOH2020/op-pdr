@@ -12,6 +12,26 @@ To report an issue, please use GitHub's built-in issue-tracking system for this 
 ## Contributing code
 If you'd like to contribute code, we'd be happy to have your support, so please contact us at os-contributions@operando.eu! You can find some examples of how you might help us on the [contributions page](https://www.operando.eu) of our website
 
+## Functional Description of Modules
+### GK
+### DAN
+### RPM
+
+## Installation Instructions
+### GK
+### DAN
+### RPM
+
+## Usage Instructions
+### GK
+### DAN
+### RPM
+
+## Future Plans
+### GK
+### DAN
+### RPM
+
 ## Dependencies
 Dependency Name|Description|Link|Module|Test-only?
 ---------------|-----------|----|------|----------
