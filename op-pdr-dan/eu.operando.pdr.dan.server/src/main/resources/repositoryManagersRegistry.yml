@@ -33,7 +33,7 @@ repositoryManagers:
   host: www.operando.eu
   port: 80
   serviceRoot: /odata
-- name: GASL_CDS
+- name: GASLINI
   serviceId: op-pdr/rpm/built-in
   schema: http
   host: www.operando.eu
