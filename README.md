@@ -22,7 +22,10 @@ GK is involved in just one workflow: retrieving user data.
 Upon receipt of a request for user data, the GK checks the authentication of the caller with the Authentication Service (AS). If the caller is authenticated, the request is forwarded to the Rights Management module, which retrieves the requested data from the Data Access Node (DAN), ‘sanitises’ it according to the wishes of the affected data subjects, and returns the (sanitised) results to the GK. The GK then returns the results to the caller.
 
 ### DAN
+DAN facilitates controlled access to multiple RPMs, which host user data. It receives requests from the Rights Manager(RM) and return the requested data to it. Upon receipt of a request for a user data, the DAN checks the authentication of the caller with the Authentication Service(AS).If the caller is authenticated, the request is forwarded to the appropriate repository manager(RPM) and the results returned to the RM.
+
 ### RPM
+RPM is the platform's built-in repository manager. Its schema is EPSOS compliant and the data are served based on oData specification.
 
 ## Installation Instructions
 ### GK
