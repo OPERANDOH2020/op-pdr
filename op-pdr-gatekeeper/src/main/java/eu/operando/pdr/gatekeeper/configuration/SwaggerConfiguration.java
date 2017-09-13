@@ -1,17 +1,4 @@
-/*******************************************************************************
- *  # Copyright (c) 2016 {UPRC}.
- *  # All rights reserved. This program and the accompanying materials
- *  # are made available under the terms of the The MIT License (MIT).
- *  # which accompanies this distribution, and is available at
- *  # http://opensource.org/licenses/MIT
- *
- *  # Contributors:
- *  #    {Constantinos Patsakis} {UPRC}
- *  #    {Stamatis Glykos} {UPRC}
- *  #    {Constantinos Alexandris} {UPRC}
- *  # Initially developed in the context of OPERANDO EU project www.operando.eu 
- *******************************************************************************/
-package eu.operando.interfaces.aapi.configuration;
+package eu.operando.pdr.gatekeeper.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -37,9 +24,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "eu.operando.interfaces.aapi")
+@ComponentScan(basePackages = "eu.operando.pdr.gk")
 @EnableSwagger2
-@SwaggerDefinition(basePath="/authenticationservice")
 class SwaggerConfiguration extends WebMvcConfigurerAdapter {
 
 	@Override
@@ -80,6 +66,7 @@ class SwaggerConfiguration extends WebMvcConfigurerAdapter {
 
 	private ApiInfo apiInfo() {
 		ApiInfo apiInfo = new ApiInfo(
+				// TODO update this
 				"OPERANDO's Authentication Service's API (AAPI)",
 				"A Restful API provided by OPERANDO's AS for authentication/authorization",
 				"1.0.0",
