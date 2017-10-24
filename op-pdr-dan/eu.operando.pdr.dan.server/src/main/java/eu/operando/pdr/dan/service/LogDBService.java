@@ -40,7 +40,7 @@ public class LogDBService implements LogDBServiceIF{
 		try {
 			logApi.lodDB(new LogRequest().logPriority(logPriority).description(logDescription).requesterId(REQUESTER_ID).title(logTitle).requesterType(LogRequest.RequesterTypeEnum.MODULE).logLevel(logLevel));			
 		} catch (ApiException ex) {	
-			LOGGER.error(String.format("eu.operando.pdr.dan.service.LogDBService.log('%s', '%s', '%s', '%s', '%s') failed", logLevel.toString(), logTitle, logDescription, logPriority), ex);			
+			LOGGER.error(String.format("eu.operando.pdr.dan.service.LogDBService.log('%s', '%s', '%s', '%s') failed", logLevel.toString(), logTitle, logDescription, logPriority), ex);			
 		}
 	}
 }
