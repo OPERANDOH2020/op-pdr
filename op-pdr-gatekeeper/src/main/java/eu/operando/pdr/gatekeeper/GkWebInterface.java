@@ -28,7 +28,7 @@ public class GkWebInterface
 	public Response processGetRequest(@Context HttpHeaders headers, @PathParam("pathPlus") String pathPlus, @Context UriInfo uriInfo)
 	{
 		MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
-		return service.processRequest(pathPlus, HttpMethod.GET, headers, queryParameters);
+		return service.processRequest(pathPlus, HttpMethod.GET, headers, queryParameters, "");
 	}
 
 	@POST
@@ -52,6 +52,6 @@ public class GkWebInterface
 	public Response processDeleteRequest(@Context HttpHeaders headers, @PathParam("pathPlus") String pathPlus, @Context UriInfo uriInfo)
 	{
 		MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
-		return service.processRequest(pathPlus, HttpMethod.DELETE, headers, queryParameters);
+		return service.processRequest(pathPlus, HttpMethod.DELETE, headers, queryParameters, "");
 	}
 }

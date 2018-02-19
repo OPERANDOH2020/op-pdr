@@ -6,6 +6,5 @@ import javax.ws.rs.core.Response;
 
 public interface GkWebService
 {
-	Response processRequest(String pathPlus, String httpMethod, HttpHeaders headers, MultivaluedMap<String, String> queryParameters);
 	Response processRequest(String pathPlus, String httpMethod, HttpHeaders headers, MultivaluedMap<String, String> queryParameters, String body);
 }

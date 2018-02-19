@@ -42,11 +42,6 @@ public class GkWebServiceImpl implements GkWebService
 		this.clientRightsManagement = clientRightsManagement;
 	}
 
-	public Response processRequest(String pathPlus, String httpMethod, HttpHeaders headers, MultivaluedMap<String, String> queryParameters)
-	{
-		return processRequest(pathPlus, httpMethod, headers, queryParameters, "");
-	}
-
 	public Response processRequest(String pathPlus, String httpMethod, HttpHeaders headersFromCaller, MultivaluedMap<String, String> queryParameters, String body)
 	{
 		Response response = null;
