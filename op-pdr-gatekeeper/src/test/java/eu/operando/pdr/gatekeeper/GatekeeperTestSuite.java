@@ -11,12 +11,12 @@ import eu.operando.moduleclients.http.HttpRequestBuilderAuthenticationApiTests;
 @RunWith(Suite.class)
 @Suite.SuiteClasses
 ({
-		GkWebServiceImplTests.class,
+		GatekeeperServiceImplTests.class,
 		ClientAuthenticationApiOperandoClientTests.class,
 		ClientAuthenticationApiOperandoServiceTests.class,
 		ClientDataAccessNodeTests.class,
 		HttpRequestBuilderAuthenticationApiTests.class
 })
-public class GkTestSuite
+public class GatekeeperTestSuite
 {
 }

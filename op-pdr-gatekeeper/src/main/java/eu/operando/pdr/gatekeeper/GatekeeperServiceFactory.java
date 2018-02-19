@@ -8,7 +8,7 @@ import eu.operando.moduleclients.ClientRightsManagement;
 import eu.operando.moduleclients.RequestBuilderAuthenticationApi;
 import eu.operando.moduleclients.http.HttpRequestBuilderAuthenticationApi;
 
-public class GkWebServiceFactory
+public class GatekeeperServiceFactory
 {
 	// Location of properties file.
 	private static final String PROPERTIES_FILE_GK = "config.properties";
@@ -19,12 +19,12 @@ public class GkWebServiceFactory
 	private static final String PROPERTY_NAME_USERNAME_GK = "usernameGk";
 	private static final String PROPERTY_NAME_PASSWORD_GK = "passwordGk";
 
-	private GkWebServiceFactory()
+	private GatekeeperServiceFactory()
 	{
 		// Factory with static method for creating GkWebServices. Should not be instantiated.
 	}
 
-	public static GkWebService create()
+	public static GatekeeperService create()
 	{
 		String originAuthenticationApi = Utils.loadPropertyString(PROPERTIES_FILE_GK, PROPERTY_NAME_ORIGIN_AUTHENTICATION_API);
 		String originRightsManagement = Utils.loadPropertyString(PROPERTIES_FILE_GK, PROPERTY_NAME_ORIGIN_RIGHTS_MANAGEMENT);
@@ -37,6 +37,6 @@ public class GkWebServiceFactory
 		ClientAuthenticationApiOperandoClient clientAuthenticationServiceOperandoClient = new ClientAuthenticationApiOperandoClient(requestBuilderAuthenticatoinApi);
 		ClientRightsManagement clientRightsManagement = new ClientRightsManagement(originRightsManagement, clientAuthenticationServiceOperandoClient);
 
-		return new GkWebServiceImpl(clientAuthenticationApiOperandoService, clientRightsManagement);
+		return new GatekeeperServiceImpl(clientAuthenticationApiOperandoService, clientRightsManagement);
 	}
 }

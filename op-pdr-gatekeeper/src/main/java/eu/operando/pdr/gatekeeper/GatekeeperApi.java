@@ -19,9 +19,9 @@ import javax.ws.rs.core.UriInfo;
  * 
  */
 @Path("resources")
-public class GkWebInterface
+public class GatekeeperApi
 {
-	private GkWebService service = GkWebServiceFactory.create(); 
+	private GatekeeperService service = GatekeeperServiceFactory.create(); 
 	
 	@GET
 	@Path("/{pathPlus : .*}")

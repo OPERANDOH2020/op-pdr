@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
  * 
  */
 @Path("monitor")
-public class GkMonitorWebInterface
+public class GatekeeperMonitorApi
 {
 	@GET
 	public Response processGetRequest(@Context HttpHeaders headers)

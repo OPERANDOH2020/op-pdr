@@ -23,10 +23,10 @@ import eu.operando.moduleclients.ClientRightsManagement;
  * complicated logic will likely require a complete rewrite anyway.
  *
  */
-public class GkWebServiceImpl implements GkWebService
+public class GatekeeperServiceImpl implements GatekeeperService
 {
 	private static final String ERROR_MESSAGE_INVALID_SERVICE_TICKET = "Invalid service ticket";
-	private static final Logger LOGGER = LogManager.getLogger(GkWebServiceImpl.class);
+	private static final Logger LOGGER = LogManager.getLogger(GatekeeperServiceImpl.class);
 	// The ID for this service.
 	private static final String SERVICE_ID_GATEKEEPER = "/gatekeeper";
 	// The name of the header which contains the service ticket from the caller.
@@ -36,7 +36,7 @@ public class GkWebServiceImpl implements GkWebService
 	private ClientAuthenticationApiOperandoService clientAuthenticationApi = null;
 	private ClientRightsManagement clientRightsManagement = null;
 
-	public GkWebServiceImpl(ClientAuthenticationApiOperandoService clientAuthenticationService, ClientRightsManagement clientRightsManagement)
+	public GatekeeperServiceImpl(ClientAuthenticationApiOperandoService clientAuthenticationService, ClientRightsManagement clientRightsManagement)
 	{
 		this.clientAuthenticationApi = clientAuthenticationService;
 		this.clientRightsManagement = clientRightsManagement;

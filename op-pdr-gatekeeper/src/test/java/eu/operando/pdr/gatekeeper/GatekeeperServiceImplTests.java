@@ -23,7 +23,7 @@ import eu.operando.OperandoCommunicationException;
 import eu.operando.moduleclients.ClientAuthenticationApiOperandoService;
 import eu.operando.moduleclients.ClientRightsManagement;
 
-public class GkWebServiceImplTests
+public class GatekeeperServiceImplTests
 {
 	private static final String HEADER_NAME_OSP_ID = "osp-identifier";
 	// Variables to test
@@ -43,7 +43,7 @@ public class GkWebServiceImplTests
 	private MultivaluedMap<String, String> stubbedHeadersFromCaller = new MultivaluedStringMap();
 
 	// System under test
-	private GkWebServiceImpl service = new GkWebServiceImpl(mockClientAuthenticationService, mockClientRightsManagement);
+	private GatekeeperServiceImpl service = new GatekeeperServiceImpl(mockClientAuthenticationService, mockClientRightsManagement);
 	
 	private MultivaluedMap<String, String> queryParameters;
 	
