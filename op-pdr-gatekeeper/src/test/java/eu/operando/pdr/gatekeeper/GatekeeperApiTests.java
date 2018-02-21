@@ -8,13 +8,11 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.ws.rs.GET;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,6 +26,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import eu.operando.AuthenticationWrapper;
 import eu.operando.OperandoCommunicationException;
 import eu.operando.UnableToGetDataException;
 import eu.operando.api.AuthenticationService;
@@ -69,7 +68,8 @@ public class GatekeeperApiTests
 	{
 		// Set up -- test case
 		String serviceTicket = "st";
-		when(authenticationDelegate.isAuthenticatedForService(serviceTicket, SERVICE_ID_GATEKEEPER)).thenReturn(false);
+		String userId = "userId";
+		when(authenticationDelegate.requestAuthenticationDetails(serviceTicket, SERVICE_ID_GATEKEEPER)).thenReturn(new AuthenticationWrapper(false, userId));
 		
 		// Set up -- common
 		HttpHeaders headers = Mockito.mock(HttpHeaders.class);
@@ -81,7 +81,7 @@ public class GatekeeperApiTests
 		exerciseApiMethod(headers, pathPlus, httpMethod.getBody(), uriInfo);
 
 		// Verify
-		verify(authenticationDelegate).isAuthenticatedForService(serviceTicket, SERVICE_ID_GATEKEEPER);
+		verify(authenticationDelegate).requestAuthenticationDetails(serviceTicket, SERVICE_ID_GATEKEEPER);
 	}
 
 	@Test(expected = UnableToGetDataException.class)
@@ -89,7 +89,7 @@ public class GatekeeperApiTests
 	{
 		// Set up -- test case
 		String serviceTicket = "st";
-		when(authenticationDelegate.isAuthenticatedForService(serviceTicket, SERVICE_ID_GATEKEEPER)).thenThrow(UnableToGetDataException.class);
+		when(authenticationDelegate.requestAuthenticationDetails(serviceTicket, SERVICE_ID_GATEKEEPER)).thenThrow(UnableToGetDataException.class);
 		
 		// Set up -- common
 		HttpHeaders headers = Mockito.mock(HttpHeaders.class);
@@ -108,7 +108,8 @@ public class GatekeeperApiTests
 	{
 		// Set up -- test case
 		String serviceTicket = "badSt";
-		when(authenticationDelegate.isAuthenticatedForService(serviceTicket, SERVICE_ID_GATEKEEPER)).thenReturn(false);
+		String userId = "userId";
+		when(authenticationDelegate.requestAuthenticationDetails(serviceTicket, SERVICE_ID_GATEKEEPER)).thenReturn(new AuthenticationWrapper(false, userId));
 		
 		// Set up -- common
 		HttpHeaders headers = Mockito.mock(HttpHeaders.class);
@@ -128,7 +129,8 @@ public class GatekeeperApiTests
 	{
 		// Set up -- test case
 		String serviceTicket = "badSt";
-		when(authenticationDelegate.isAuthenticatedForService(serviceTicket, SERVICE_ID_GATEKEEPER)).thenReturn(false);
+		String userId = "userId";
+		when(authenticationDelegate.requestAuthenticationDetails(serviceTicket, SERVICE_ID_GATEKEEPER)).thenReturn(new AuthenticationWrapper(false, userId));
 		
 		// Set up -- common
 		HttpHeaders headers = Mockito.mock(HttpHeaders.class);
@@ -149,7 +151,8 @@ public class GatekeeperApiTests
 	{
 		// Set up
 		String serviceTicket = "st";
-		when(authenticationDelegate.isAuthenticatedForService(serviceTicket, SERVICE_ID_GATEKEEPER)).thenReturn(true);
+		String userId = "userId";
+		when(authenticationDelegate.requestAuthenticationDetails(serviceTicket, SERVICE_ID_GATEKEEPER)).thenReturn(new AuthenticationWrapper(true, userId));
 		
 		HttpHeaders headers = Mockito.mock(HttpHeaders.class);
 		when(headers.getHeaderString(HEADER_NAME_SERVICE_TICKET)).thenReturn(serviceTicket);
@@ -158,7 +161,7 @@ public class GatekeeperApiTests
 		UriInfo uriInfo = Mockito.mock(UriInfo.class);
 		
 		Response expectedResponse = Response.ok().entity("entity").build();
-		when(gkDelegate.processRequest(pathPlus, httpMethod.toString(), headers, uriInfo.getQueryParameters(), httpMethod.getBody())).thenReturn(expectedResponse);
+		when(gkDelegate.processRequest(pathPlus, httpMethod.toString(), headers, uriInfo.getQueryParameters(), httpMethod.getBody(), userId)).thenReturn(expectedResponse);
 
 		// Exercise
 		Response response = exerciseApiMethod(headers, pathPlus, httpMethod.getBody(), uriInfo);

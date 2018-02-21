@@ -3,7 +3,6 @@ package eu.operando.pdr.gatekeeper;
 import eu.operando.CredentialsOperando;
 import eu.operando.Utils;
 import eu.operando.moduleclients.ClientAuthenticationApiOperandoClient;
-import eu.operando.moduleclients.ClientAuthenticationApiOperandoService;
 import eu.operando.moduleclients.ClientRightsManagement;
 import eu.operando.moduleclients.RequestBuilderAuthenticationApi;
 import eu.operando.moduleclients.http.HttpRequestBuilderAuthenticationApi;
@@ -28,7 +27,6 @@ public class GatekeeperServiceFactory
 	{
 		String originAuthenticationApi = Utils.loadPropertyString(PROPERTIES_FILE_GK, PROPERTY_NAME_ORIGIN_AUTHENTICATION_API);
 		String originRightsManagement = Utils.loadPropertyString(PROPERTIES_FILE_GK, PROPERTY_NAME_ORIGIN_RIGHTS_MANAGEMENT);
-		ClientAuthenticationApiOperandoService clientAuthenticationApiOperandoService = new ClientAuthenticationApiOperandoService(originAuthenticationApi);
 
 		String usernameGk = Utils.loadPropertyString(PROPERTIES_FILE_GK, PROPERTY_NAME_USERNAME_GK);
 		String passwordGk = Utils.loadPropertyString(PROPERTIES_FILE_GK, PROPERTY_NAME_PASSWORD_GK);
@@ -37,6 +35,6 @@ public class GatekeeperServiceFactory
 		ClientAuthenticationApiOperandoClient clientAuthenticationServiceOperandoClient = new ClientAuthenticationApiOperandoClient(requestBuilderAuthenticatoinApi);
 		ClientRightsManagement clientRightsManagement = new ClientRightsManagement(originRightsManagement, clientAuthenticationServiceOperandoClient);
 
-		return new GatekeeperServiceImpl(clientAuthenticationApiOperandoService, clientRightsManagement);
+		return new GatekeeperServiceImpl(clientRightsManagement);
 	}
 }

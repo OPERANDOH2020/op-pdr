@@ -3,16 +3,12 @@ package eu.operando.pdr.gatekeeper;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 
-import eu.operando.AuthenticationWrapper;
 import eu.operando.OperandoAuthenticationException;
-import eu.operando.OperandoCommunicationException;
-import eu.operando.moduleclients.ClientAuthenticationApiOperandoService;
 import eu.operando.moduleclients.ClientRightsManagement;
 
 /**
@@ -25,80 +21,33 @@ import eu.operando.moduleclients.ClientRightsManagement;
  */
 public class GatekeeperServiceImpl implements GatekeeperService
 {
-	private static final String ERROR_MESSAGE_INVALID_SERVICE_TICKET = "Invalid service ticket";
 	private static final Logger LOGGER = LogManager.getLogger(GatekeeperServiceImpl.class);
-	// The ID for this service.
-	private static final String SERVICE_ID_GATEKEEPER = "/gatekeeper";
+	
 	// The name of the header which contains the service ticket from the caller.
 	private static final String HEADER_NAME_SERVICE_TICKET = "service-ticket";
 	private static final String HEADER_NAME_HOST = "host";
 	
-	private ClientAuthenticationApiOperandoService clientAuthenticationApi = null;
 	private ClientRightsManagement clientRightsManagement = null;
 
-	public GatekeeperServiceImpl(ClientAuthenticationApiOperandoService clientAuthenticationService, ClientRightsManagement clientRightsManagement)
+	public GatekeeperServiceImpl(ClientRightsManagement clientRightsManagement)
 	{
-		this.clientAuthenticationApi = clientAuthenticationService;
 		this.clientRightsManagement = clientRightsManagement;
 	}
 
-	public Response processRequest(String pathPlus, String httpMethod, HttpHeaders headersFromCaller, MultivaluedMap<String, String> queryParameters, String body)
+	public Response processRequest(String pathPlus, String httpMethod, HttpHeaders headersFromCaller, MultivaluedMap<String, String> queryParameters, String body, String idOspUser)
 	{
-		Response response = null;
-		Status status = null;
-		String errorMessage = "";
+		Response response;
 		
-		boolean error = false;
-		
-		String serviceTicket = headersFromCaller.getHeaderString(HEADER_NAME_SERVICE_TICKET);
-		if (serviceTicket == null)
+		MultivaluedMap<String, String> headersToDan = filterHeaders(headersFromCaller);
+		try
 		{
-			error = true;
-			status = Status.BAD_REQUEST;
-			errorMessage = "A service ticket must be provided using the service-ticket header.";
+			response = clientRightsManagement.sendRequest(httpMethod, headersToDan, idOspUser, pathPlus, queryParameters, body);
 		}
-		
-		if (!error)
+		catch (OperandoAuthenticationException e)
 		{
-			try
-			{
-				AuthenticationWrapper authenticationWrapper = clientAuthenticationApi.requestAuthenticationDetails(serviceTicket, SERVICE_ID_GATEKEEPER);
-				boolean validTicket = authenticationWrapper.isTicketValid();
-				if (validTicket)
-				{
-					String idOspUser = authenticationWrapper.getIdOspUser();
-					MultivaluedMap<String, String> headersToDan = filterHeaders(headersFromCaller);
-					try
-					{
-						response = clientRightsManagement.sendRequest(httpMethod, headersToDan, idOspUser, pathPlus, queryParameters, body);
-					}
-					catch (OperandoAuthenticationException e)
-					{
-						error = true;
-						status = Status.INTERNAL_SERVER_ERROR;
-						LOGGER.error("Error with authentication procedure", e);
-					}
-				}
-				else
-				{
-					error = true;
-					status = Status.FORBIDDEN;
-					errorMessage = ERROR_MESSAGE_INVALID_SERVICE_TICKET;
-				}
-			}
-			catch (OperandoCommunicationException e)
-			{
-				error = true;
-				status = Status.INTERNAL_SERVER_ERROR;
-				LOGGER.error("Error communicating with another module", e);
-				errorMessage = "Internal Server Error";
-			}
+			LOGGER.error("Error with authentication procedure", e);
+			response = Response.serverError().build();
 		}
-		
-		if (error)
-		{
-			response = Response.status(status).entity(errorMessage).build();
-		}		
 		
 		return response;
 	}

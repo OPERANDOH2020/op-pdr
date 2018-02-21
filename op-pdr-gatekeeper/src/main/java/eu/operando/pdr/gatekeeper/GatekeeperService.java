@@ -6,5 +6,5 @@ import javax.ws.rs.core.Response;
 
 public interface GatekeeperService
 {
-	Response processRequest(String pathPlus, String httpMethod, HttpHeaders headers, MultivaluedMap<String, String> queryParameters, String body);
+	Response processRequest(String pathPlus, String httpMethod, HttpHeaders headers, MultivaluedMap<String, String> queryParameters, String body, String idOspUser);
 }

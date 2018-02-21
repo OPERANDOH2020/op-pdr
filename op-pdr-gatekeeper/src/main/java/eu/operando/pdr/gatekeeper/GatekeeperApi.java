@@ -11,10 +11,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
+import eu.operando.AuthenticationWrapper;
 import eu.operando.UnableToGetDataException;
 import eu.operando.api.AuthenticationService;
 import eu.operando.api.factories.AuthenticationServiceFactory;
@@ -47,78 +48,45 @@ public class GatekeeperApi
 	@Path("/{pathPlus : .*}")
 	public Response processGetRequest(@Context HttpHeaders headers, @PathParam("pathPlus") String pathPlus, @Context UriInfo uriInfo) throws UnableToGetDataException
 	{
-		Response errorResponse = validateRequest(headers);
-		if (errorResponse != null)
-		{
-			return errorResponse;
-		}
-		
-		MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
-		return service.processRequest(pathPlus, HttpMethod.GET, headers, queryParameters, "");
+		return processRequest(HttpMethod.GET, headers, pathPlus, uriInfo, "");
 	}
 
 	@POST
 	@Path("/{pathPlus : .*}")
 	public Response processPostRequest(@Context HttpHeaders headers, @PathParam("pathPlus") String pathPlus, String body, @Context UriInfo uriInfo) throws UnableToGetDataException
 	{
-		Response errorResponse = validateRequest(headers);
-		if (errorResponse != null)
-		{
-			return errorResponse;
-		}
-		
-		MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
-		return service.processRequest(pathPlus, HttpMethod.POST, headers, queryParameters, body);
+		return processRequest(HttpMethod.POST, headers, pathPlus, uriInfo, body);
 	}
 
 	@PUT
 	@Path("/{pathPlus : .*}")
 	public Response processPutRequest(@Context HttpHeaders headers, @PathParam("pathPlus") String pathPlus, String body, @Context UriInfo uriInfo) throws UnableToGetDataException
 	{
-		Response errorResponse = validateRequest(headers);
-		if (errorResponse != null)
-		{
-			return errorResponse;
-		}
-		
-		MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
-		return service.processRequest(pathPlus, HttpMethod.PUT, headers, queryParameters, body);
+		return processRequest(HttpMethod.PUT, headers, pathPlus, uriInfo, body);
 	}
 
 	@DELETE
 	@Path("/{pathPlus : .*}")
 	public Response processDeleteRequest(@Context HttpHeaders headers, @PathParam("pathPlus") String pathPlus, @Context UriInfo uriInfo) throws UnableToGetDataException
 	{
-		Response errorResponse = validateRequest(headers);
-		if (errorResponse != null)
-		{
-			return errorResponse;
-		}
-		
-		MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
-		return service.processRequest(pathPlus, HttpMethod.DELETE, headers, queryParameters, "");
+		return processRequest(HttpMethod.DELETE, headers, pathPlus, uriInfo, "");
 	}
 
-	/**
-	 * Validates an incoming HTTP request.
-	 * @param headers the headers in the request.
-	 * @return an appropriate response if there is a validation error, null otherwise.
-	 * @throws UnableToGetDataException if there is an error in inter-module communication
-	 */
-	private Response validateRequest(HttpHeaders headers) throws UnableToGetDataException
+	private Response processRequest(String httpMethod, HttpHeaders headers, String pathPlus, UriInfo uriInfo, String body) throws UnableToGetDataException
 	{
 		String serviceTicket = headers.getHeaderString(HEADER_NAME_SERVICE_TICKET);
-		
 		if (serviceTicket == null)
 		{
 			return noTicketResponseBuilder.build();
 		}
 		
-		if (!authenticationDelegate.isAuthenticatedForService(serviceTicket, SERVICE_ID_GATEKEEPER))
+		AuthenticationWrapper wrapper = authenticationDelegate.requestAuthenticationDetails(serviceTicket, SERVICE_ID_GATEKEEPER);		
+		if (!wrapper.isTicketValid())
 		{
 			return invalidTicketResponseBuilder.build();
 		}
 		
-		return null;
+		MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
+		return service.processRequest(pathPlus, httpMethod, headers, queryParameters, body, wrapper.getIdOspUser());
 	}
 }
