@@ -1,7 +1,6 @@
 package eu.operando.pdr.gatekeeper;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -12,6 +11,7 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import eu.operando.OperandoAuthenticationException;
@@ -77,7 +77,7 @@ public class GatekeeperServiceImplTests
 	{		
 		// Set up		
 		Response responseFromRm = Response.ok().build();
-		when(mockClientRightsManagement.sendRequest(eq(HTTP_METHOD), any(MultivaluedMap.class), eq(PSP_USER_ID_CALLER), eq(PATH_PLUS), eq(queryParameters),  eq(BODY)))
+		when(mockClientRightsManagement.sendRequest(eq(HTTP_METHOD), Matchers.<MultivaluedMap<String, String>>any(), eq(PSP_USER_ID_CALLER), eq(PATH_PLUS), eq(queryParameters),  eq(BODY)))
 			.thenReturn(responseFromRm);
 
 		// Exercise

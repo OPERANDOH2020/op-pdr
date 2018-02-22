@@ -85,6 +85,7 @@ public class GatekeeperApiTests
 	}
 
 	@Test(expected = UnableToGetDataException.class)
+	@SuppressWarnings("unchecked")
 	public void testProcessHttpMethodRequest_CannotAuthenticate_ThrowException() throws OperandoCommunicationException, UnableToGetDataException
 	{
 		// Set up -- test case
