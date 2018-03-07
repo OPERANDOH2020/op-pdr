@@ -105,7 +105,7 @@
 		<aapi.baseurl>http://integration.operando.esilab.org:8135/operando/interfaces/aapi</aapi.baseurl>
 		<dan.baseurl>http://integration.operando.esilab.org:8111/operando/pdr/dan</dan.baseurl>
 		<ldb.baseurl>http://integration.operando.esilab.org:8090/operando/core/ldb</ldb.baseurl>
-	    <rm.baseurl>http://150.140.90.165:8102</rm.baseurl>
+        <rm.baseurl>http://integration.operando.esilab.org:8102</rm.baseurl>
 		<aapi.gkusername>gatekeeper</aapi.gkusername>
 		<aapi.gkpassword>gatekeeper</aapi.gkpassword>
 		<packaging.type>jar</packaging.type>
